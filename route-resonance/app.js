@@ -2,7 +2,7 @@
 const CATS = {
   weather: ['sunny', 'rain', 'cloud', 'wind', 'snow'],
   time:    ['sunrise', 'day', 'dusk', 'night'],
-  place:   ['forest', 'waves', 'ocean', 'mountain', 'city']
+  place:   ['forest', 'waves', 'highway', 'mountain', 'city']
 };
 const ALL_THEMES = [...CATS.weather, ...CATS.time, ...CATS.place];
 const CAT_MAP = {};
@@ -12,7 +12,7 @@ const AUTO_SET   = new Set(['waves', 'sunrise']);
 const META = {
   sunny: 'Sunny',   rain: 'Rain',     cloud: 'Overcast', wind: 'Wind',
   snow: 'Snow',     sunrise: 'Sunrise', day: 'Daytime', dusk: 'Dusk',
-  night: 'Night',   forest: 'Forest',  waves: 'Coastal', ocean: 'Ocean',
+  night: 'Night',   forest: 'Forest',  waves: 'Coastal', highway: 'Highway',
   mountain: 'Mountain', city: 'City'
 };
 
@@ -28,7 +28,7 @@ const ICONS = {
   night:    `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M24 10Q16 11 13 19Q10 27 17 33Q24 39 32 37Q23 38 21 32Q17 24 21 18Q22 13 29 11Q26 10 24 10Z" fill="rgba(50,100,200,0.12)" stroke="#3A62A0" stroke-width=".9"/><circle cx="31" cy="13" r="1.6" fill="#5A7ACC"/><circle cx="34" cy="23" r="1.3" fill="#5A7ACC"/><circle cx="28" cy="31" r="1.8" fill="#5A7ACC"/></svg>`,
   forest:   `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M22 34L22 22L28 22L21 9L14 22L20 22L20 34Z" fill="rgba(60,120,20,0.2)" stroke="#4A9020" stroke-width=".9"/><path d="M12 34L12 24L10 24L17 14L17 18L21 18L13 7L8 18" fill="rgba(50,100,15,0.12)" stroke="#386010" stroke-width=".8"/><path d="M5 34L39 34" stroke="#2A3020" stroke-width=".7"/></svg>`,
   waves:    `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M8 19Q13 13 18 19Q23 25 28 19Q33 13 38 19" stroke="#3A72B8" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M8 27Q13 21 18 27Q23 33 28 27Q33 21 38 27" stroke="#2A62A8" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M8 35Q13 29 18 35Q23 41 28 35Q33 29 38 35" stroke="#1C52A0" stroke-width="1.1" fill="none" stroke-linecap="round"/></svg>`,
-  ocean:    `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M8 28Q13 22 18 28Q23 34 28 28Q33 22 38 28" stroke="#2A62A8" stroke-width="1.3" fill="rgba(42,98,168,0.07)" stroke-linecap="round"/><path d="M8 36Q13 30 18 36Q23 42 28 36Q33 30 38 36" stroke="#1C52A0" stroke-width="1.1" fill="none" stroke-linecap="round"/><circle cx="22" cy="16" r="8" fill="rgba(220,160,50,0.08)" stroke="#A87A10" stroke-width=".9"/><path d="M22 7L22 9M22 23L22 25M14 16L16 16M28 16L30 16" stroke="#A87A10" stroke-width=".9" stroke-linecap="round"/></svg>`,
+  highway:  `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M12 36L19 14H25L32 36" stroke="#4A5260" stroke-width="1.8" stroke-linecap="round"/><path d="M22 17L22 21M22 26L22 32" stroke="#D4A020" stroke-width="1.3" stroke-linecap="round"/><path d="M6 24L38 24" stroke="#2A2A38" stroke-width="1"/><path d="M10 21L13 14H31L34 21" stroke="#3A3A4A" stroke-width="0.8" fill="rgba(80,80,100,0.08)"/></svg>`,
   mountain: `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M6 37L18 16L30 37Z" fill="rgba(80,80,100,0.12)" stroke="#5A5A78" stroke-width=".9"/><path d="M23 37L32 19L41 37Z" fill="rgba(65,65,88,0.16)" stroke="#4A4A68" stroke-width=".9"/><path d="M14 24Q17 20 20 24" fill="white" stroke="rgba(200,210,240,0.5)" stroke-width=".5"/><path d="M28 26Q31 22 34 26" fill="white" stroke="rgba(200,210,240,0.5)" stroke-width=".5"/><path d="M5 37L42 37" stroke="#2A2A40" stroke-width=".7"/></svg>`,
   city:     `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="4" y="26" width="8" height="13" fill="rgba(80,80,105,0.15)" stroke="#4A4A68" stroke-width=".8"/><rect x="14" y="18" width="11" height="21" fill="rgba(80,80,105,0.15)" stroke="#4A4A68" stroke-width=".8"/><rect x="27" y="22" width="8" height="17" fill="rgba(80,80,105,0.15)" stroke="#4A4A68" stroke-width=".8"/><rect x="37" y="25" width="5" height="14" fill="rgba(80,80,105,0.15)" stroke="#4A4A68" stroke-width=".8"/><path d="M3 39L43 39" stroke="#2A2A40" stroke-width=".7"/><rect x="16" y="23" width="3" height="3" fill="#C88A1A" opacity=".5"/><rect x="21" y="23" width="3" height="3" fill="#C88A1A" opacity=".5"/></svg>`
 };
@@ -195,17 +195,15 @@ const patches = {
     ch(n3,f3,g3,out); n3.start(); l3.start();
     return () => [n1,n2,n3,l1,l2,l3].forEach(n => n.stop());
   },
-  ocean(out) {
-    function wl(freq,lf,la,gv) {
-      const n=mkN(), f=mkF('bandpass',freq,.6), g=mkG(gv);
-      const l=mkO('sine',lf), lg=mkG(la); l.connect(lg); lg.connect(g.gain);
-      ch(n,f,g,out); n.start(); l.start(); return [n,l];
-    }
-    const [n1,l1]=wl(320,.08,.18,.2), [n2,l2]=wl(550,.13,.12,.16);
-    const os = [130.8,164.8,196].map(f => {
-      const o=mkO('sine',f), g=mkG(.015); o.connect(g); g.connect(out); o.start(); return o;
-    });
-    return () => { [n1,n2,l1,l2].forEach(n => n.stop()); os.forEach(o => o.stop()); };
+  highway(out) {
+    // Low rumble / wind for open highway
+    const n=mkN(), f=mkF('lowpass',220), g=mkG(.3);
+    const lfo=mkO('sine',.15), lg=mkG(.15); lfo.connect(lg); lg.connect(g.gain);
+    ch(n,f,g,out); n.start(); lfo.start();
+    const n2=mkN(), f2=mkF('bandpass',800,.3), g2=mkG(.08);
+    const lfo2=mkO('sine',.05), lg2=mkG(.04); lfo2.connect(lg2); lg2.connect(g2.gain);
+    ch(n2,f2,g2,out); n2.start(); lfo2.start();
+    return () => { [n,n2,lfo,lfo2].forEach(x => x.stop()); };
   },
   mountain(out) {
     const n=mkN(), f=mkF('bandpass',380,.5), lfo=mkO('sine',.045), lg=mkG(280), g=mkG(.3);
@@ -496,13 +494,13 @@ renderAll();
 
   const SKIES = {
     sunrise: ['#0B0D15','#1A1028','#3A1828','#C85828','#E8A040'],
-    day:     ['#0A1830','#1A3858','#2A5878','#4A88A8','#6AA8C0'],
+    day:     ['#2A5090','#4A80C0','#6AAAD8','#90D0F0','#B8F0FF'],
     dusk:    ['#0B0D15','#14102A','#2A1828','#7A3A18','#C87828'],
     night:   ['#040610','#060A14','#080E1A','#0A1220','#0E1828']
   };
   const SUNS = {
     sunrise: {y:.36,r:8,dc:'rgba(255,200,100,0.85)',gc:'rgba(255,160,60,0.5)',gr:55},
-    day:     {y:.12,r:9,dc:'rgba(255,250,220,0.9)', gc:'rgba(255,240,180,0.35)',gr:60},
+    day:     {y:.14,r:12,dc:'rgba(255,255,245,1)',gc:'rgba(255,250,210,0.65)',gr:85},
     dusk:    {y:.38,r:7,dc:'rgba(255,215,140,0.85)',gc:'rgba(255,190,80,0.5)',gr:55},
     night:   {y:.2, r:4,dc:'rgba(200,215,240,0.6)', gc:'rgba(150,170,220,0.12)',gr:30}
   };
@@ -510,7 +508,7 @@ renderAll();
   const TERRAIN = {
     forest:   { band: ['#0E2810','#0A1E0C'], mt: ['#0C200E','#081808'], hill: ['#0A1C0C','#071406'], road: ['#1A1A20','#101014'] },
     waves:    { band: ['#1A3050','#0F1E30'], mt: ['#152030','#0E1820'], hill: ['#0E1820','#0A1418'], road: ['#1A1A24','#111118'] },
-    ocean:    { band: ['#122848','#0C1E38'], mt: ['#0E1830','#0A1220'], hill: ['#0C1628','#08101C'], road: ['#181A24','#101118'] },
+    highway:  { band: ['#1C1E26','#14151C'], mt: ['#1A1C24','#12141A'], hill: ['#161820','#101218'], road: ['#181A22','#101116'] },
     mountain: { band: ['#14182A','#0E1220'], mt: ['#1A2038','#121828'], hill: ['#101828','#0C1220'], road: ['#1A1A24','#111118'] },
     city:     { band: ['#101420','#0C1018'], mt: ['#12161E','#0E1218'], hill: ['#0E1218','#0A0E14'], road: ['#1C1C28','#14141C'] }
   };
@@ -659,11 +657,16 @@ renderAll();
         c.beginPath(); c.ellipse(x,y-2,5,3,0,0,6.28);
         c.fillStyle='#1E2C1A'; c.fill();
       }
-    } else if(place==='ocean') {
-      // Occasional pier post or buoy
-      if(o.v%4===0) {
-        c.fillStyle='#3A3028'; c.fillRect(x-1,y-12,2.5,12);
-        c.fillStyle='#2A2820'; c.fillRect(x-4,y-13,10,2);
+    } else if(place==='highway') {
+      // Occasional power lines or billboards
+      if(o.v%5===0) {
+        c.fillStyle='#2A2824'; c.fillRect(x-2,y-24,4,24);
+        c.fillStyle='#1A1814'; c.fillRect(x-12,y-18,24,2);
+        c.fillStyle='#1A1814'; c.fillRect(x-16,y-24,32,2);
+      } else if(o.v%6===0) {
+        c.fillStyle='#3A3A4A'; c.fillRect(x-8,y-18,3,18); c.fillRect(x+5,y-18,3,18);
+        c.fillStyle='#223080'; c.fillRect(x-14,y-32,28,14);
+        c.fillStyle='rgba(255,255,255,0.15)'; c.fillRect(x-10,y-28,20,6);
       }
     } else {
       // Coastal default - mixed vegetation
@@ -781,14 +784,13 @@ renderAll();
     c.fillStyle=og; c.fillRect(0,hY,W,rY-hY);
 
     // Place-specific mid-ground
-    if(pl==='ocean') {
-      drawOceanWaves(hY,rY,isNight);
-      // Sun/moon reflection on water
-      c.save(); c.globalAlpha=isNight?0.06:0.12;
-      c.strokeStyle=isNight?'#4A6080':'#C89040'; c.lineWidth=0.7;
-      for(let i=0;i<14;i++) {
-        const wy=hY+2+(i%5)*((rY-hY)/5), wx=W*0.7+Math.sin(fr*0.03+i*1.2)*8, ww=22-i;
-        if(ww>2){c.beginPath();c.moveTo(wx-ww/2,wy);c.lineTo(wx+ww/2,wy);c.stroke();}
+    if(pl==='highway') {
+      // Distant powerlines stretching
+      c.save(); c.strokeStyle=isNight?'rgba(255,255,255,0.03)':'rgba(0,0,0,0.1)'; c.lineWidth=0.5;
+      const pOff=(fr*0.1)%40;
+      for(let i=0;i<4;i++) {
+        const wy=hY+3+i*3;
+        c.beginPath(); c.moveTo(0,wy); c.lineTo(W,wy); c.stroke();
       }
       c.restore();
     } else if(pl==='waves') {
@@ -816,7 +818,7 @@ renderAll();
     }
 
     // Mountains - vary amplitude by place
-    const mtAmp = pl==='mountain'?2.2 : pl==='city'?0 : pl==='ocean'?0.4 : pl==='forest'?0.6 : 1;
+    const mtAmp = pl==='mountain'?2.2 : pl==='city'?0 : pl==='highway'?0.3 : pl==='forest'?0.6 : 1;
     if(mtAmp>0) {
       const mOff=(fr*0.12)%300;
       c.beginPath(); c.moveTo(-10,hY+4);
@@ -840,7 +842,7 @@ renderAll();
     }
 
     // Near hills
-    const hillAmp = pl==='city'?0 : pl==='mountain'?1.5 : pl==='forest'?1.2 : pl==='ocean'?0.3 : 1;
+    const hillAmp = pl==='city'?0 : pl==='mountain'?1.5 : pl==='forest'?1.2 : pl==='highway'?0.2 : 1;
     if(hillAmp>0) {
       const hOff=(fr*0.35)%250;
       c.beginPath(); c.moveTo(-10,rY+2);
@@ -879,7 +881,7 @@ renderAll();
 
     // Scenery objects
     const fOff=(fr*1.4)%WW;
-    const objSpacing = pl==='forest'?0.7 : pl==='city'?0.5 : 1;
+    const objSpacing = pl==='forest'?0.7 : pl==='city'?0.5 : pl==='highway'?1.8 : 1;
     objs.forEach(o => {
       const x=wrp(o.x*objSpacing,fOff*objSpacing);
       if(x>W+40) return;
@@ -889,7 +891,7 @@ renderAll();
     // Lamp posts (more in city, fewer in forest/mountain)
     const lOff=(fr*2.8)%WW;
     const lampGlow = isNight?0.45 : sc.time==='dusk'?0.35 : 0.2;
-    const showLamps = pl==='ocean' ? false : true;
+    const showLamps = pl==='highway' ? false : true;
     if(showLamps) {
       const lampArr = pl==='city' ? [...lamps,...lamps.map(l=>({x:l.x+WW/32}))] : lamps;
       lampArr.forEach(l => {

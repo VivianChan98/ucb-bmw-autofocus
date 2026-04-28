@@ -33,11 +33,11 @@ body {
 .tb-left  { display: flex; align-items: center; gap: 18px; }
 .tb-right { display: flex; align-items: center; gap: 24px; }
 
-.brand     { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; color: #EEEEF2; }
-.brand-sub { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: #2C2C48; margin-top: 3px; }
+.brand     { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; color: #F4F4F8; }
+.brand-sub { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: #4A4A6A; margin-top: 3px; }
 
 .auto-row { display: flex; align-items: center; gap: 9px; }
-.auto-lbl { font-size: 10px; letter-spacing: .1em; color: #3A3A55; }
+.auto-lbl { font-size: 10px; letter-spacing: .1em; color: #5A5A78; }
 
 /* ── Toggle ──────────────────────────────────────────────────── */
 .tog-wrap { position: relative; width: 42px; height: 23px; cursor: pointer; display: block; }
@@ -79,22 +79,22 @@ body {
   background: #0D0E18;
   border-radius: 18px;
   padding: 16px;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
 .ctx-ico   { width: 46px; height: 46px; border-radius: 14px; background: rgba(28,105,212,0.1); border: 1px solid rgba(28,105,212,0.18); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .ctx-row   { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.ctx-title { font-size: 13px; font-weight: 500; color: #EEEEF2; margin-bottom: 3px; }
-.ctx-meta  { font-size: 10px; color: #3A3A55; }
+.ctx-title { font-size: 13px; font-weight: 500; color: #F0F0F4; margin-bottom: 3px; }
+.ctx-meta  { font-size: 10px; color: #5A5A78; }
 .ctx-tags  { display: flex; gap: 5px; flex-wrap: wrap; }
-.ctx-tag   { font-size: 9px; padding: 3px 9px; border-radius: 6px; background: rgba(255,255,255,0.04); color: #3A3A55; border: 1px solid rgba(255,255,255,0.04); }
+.ctx-tag   { font-size: 9px; padding: 3px 9px; border-radius: 6px; background: rgba(255,255,255,0.06); color: #6A6A88; border: 1px solid rgba(255,255,255,0.06); }
 
 /* ── Mix sliders ─────────────────────────────────────────────── */
-.mix-ttl { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: #2C2C45; font-weight: 500; margin-bottom: 14px; }
+.mix-ttl { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: #4A4A68; font-weight: 500; margin-bottom: 14px; }
 .mix-row  { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
 .mix-row:last-child { margin-bottom: 0; }
-.mix-lbl  { font-size: 10px; color: #3A3A55; width: 56px; }
-.mval     { font-size: 10px; color: #3A3A55; width: 30px; text-align: right; }
+.mix-lbl  { font-size: 10px; color: #6A6A88; width: 56px; }
+.mval     { font-size: 10px; color: #6A6A88; width: 30px; text-align: right; }
 
 .mslid { flex: 1; -webkit-appearance: none; appearance: none; height: 2px; background: #1A1B28; border-radius: 1px; outline: none; cursor: pointer; }
 .mslid::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #1C69D4; border: 2.5px solid #07080E; cursor: pointer; }
@@ -107,20 +107,20 @@ body {
 .pbtn:hover  { background: #2576E8; transform: scale(1.04); }
 .pbtn:active { transform: scale(0.97); }
 
-.np-lbl { font-size: 9px; color: #2C2C45; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 3px; }
-.np-txt      { font-size: 11px; color: #3A3A55; transition: color .3s; }
-.np-txt.live { color: #EEEEF2; }
+.np-lbl { font-size: 9px; color: #4A4A68; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 3px; }
+.np-txt      { font-size: 11px; color: #5A5A78; transition: color .3s; }
+.np-txt.live { color: #F0F0F4; }
 
 /* ── Main area ───────────────────────────────────────────────── */
 .main { padding: 28px 32px; display: flex; flex-direction: column; gap: 22px; }
 
 .sec     { display: flex; flex-direction: column; gap: 12px; }
 .sec-hdr { display: flex; align-items: center; gap: 10px; }
-.sec-lbl { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: #2C2C45; font-weight: 500; white-space: nowrap; }
-.sec-line{ flex: 1; height: 1px; background: rgba(255,255,255,0.04); }
-.sec-ct  { font-size: 9px; color: #1C69D4; font-weight: 500; }
+.sec-lbl { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: #5A5A78; font-weight: 500; white-space: nowrap; }
+.sec-line{ flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+.sec-ct  { font-size: 9px; color: #3A8AEE; font-weight: 500; }
 
-.divider { height: 1px; background: rgba(255,255,255,0.04); }
+.divider { height: 1px; background: rgba(255,255,255,0.06); }
 
 /* ── Theme grids ─────────────────────────────────────────────── */
 .grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
@@ -129,16 +129,16 @@ body {
 .tile {
   display: flex; flex-direction: column; align-items: center; gap: 7px;
   cursor: pointer; padding: 16px 6px 13px; border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.04); background: #0D0E18;
+  border: 1px solid rgba(255,255,255,0.07); background: #0D0E18;
   transition: background .15s, border-color .15s;
   position: relative; overflow: hidden;
 }
-.tile:hover   { background: #12131E; border-color: rgba(255,255,255,0.07); }
-.tile.sel     { background: rgba(28,105,212,0.1); border-color: rgba(28,105,212,0.32); }
-.tile.snd     { border-color: #1C69D4; }
+.tile:hover   { background: #14151F; border-color: rgba(255,255,255,0.12); }
+.tile.sel     { background: rgba(28,105,212,0.14); border-color: rgba(28,105,212,0.4); }
+.tile.snd     { border-color: #2878E8; }
 .tile-ico     { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
-.tile-lbl     { font-size: 10px; color: #3A3A55; text-align: center; }
-.tile.sel .tile-lbl { color: #4A82D4; }
+.tile-lbl     { font-size: 10px; color: #5A5A78; text-align: center; }
+.tile.sel .tile-lbl { color: #5A9AEE; }
 
 .pulse { position: absolute; inset: 0; border-radius: 17px; border: 1px solid #1C69D4; opacity: 0; pointer-events: none; }
 .snd .pulse { animation: pr 2.2s ease-out infinite; }
