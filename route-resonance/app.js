@@ -34,6 +34,14 @@ const ICONS = {
 };
 
 // ─── State ────────────────────────────────────────────────────
+const PLAYLISTS = {
+  forest:   ['music/forest.mp3'],
+  waves:    ['music/coastal.mp3'],
+  highway:  ['music/highway.mp3'],
+  mountain: ['music/mountain.mp3'],
+  city:     ['music/city.mp3']
+};
+
 let API_KEY    = '';
 let audioCtx   = null;
 let masterGain = null;
@@ -43,6 +51,34 @@ let playing    = false;
 let autoMode   = true;
 let sel        = new Set(['waves', 'sunrise']);
 let moodOpen   = false;
+
+let bgmAudio = new Audio();
+bgmAudio.loop = true;
+let currentBgmPlace = null;
+
+function updateBGM() {
+  if (!playing) {
+    bgmAudio.pause();
+    return;
+  }
+  const cur = autoMode ? AUTO_SET : sel;
+  let place = null;
+  ['forest','waves','highway','mountain','city'].forEach(p => { if(cur.has(p)) place=p; });
+  
+  if (place && PLAYLISTS[place] && PLAYLISTS[place].length > 0) {
+    if (currentBgmPlace !== place) {
+      currentBgmPlace = place;
+      const tracks = PLAYLISTS[place];
+      bgmAudio.src = tracks[Math.floor(Math.random() * tracks.length)];
+      bgmAudio.play().catch(e => console.log('BGM play blocked', e));
+    } else {
+      if (bgmAudio.paused) bgmAudio.play().catch(e => console.log('BGM play blocked', e));
+    }
+  } else {
+    bgmAudio.pause();
+    currentBgmPlace = null;
+  }
+}
 
 // ─── Audio helpers ────────────────────────────────────────────
 function mkN() { const s = audioCtx.createBufferSource(); s.buffer = noiseBuffer; s.loop = true; return s; }
@@ -311,11 +347,13 @@ async function startActive() {
     if (!active[id] && patches[id]) active[id] = patches[id](masterGain);
   });
   renderAll(); updateNP();
+  updateBGM();
 }
 
 function stopAll() {
   Object.values(active).forEach(s => { try { s(); } catch(e) {} });
   active = {}; renderAll(); updateNP();
+  updateBGM();
 }
 
 // ─── UI — playback ────────────────────────────────────────────
@@ -334,6 +372,7 @@ function onAmb(v) {
 
 function onMusic(v) {
   document.getElementById('musV').textContent = Math.round(v) + '%';
+  if (bgmAudio) bgmAudio.volume = v / 100;
 }
 
 // ─── UI — auto toggle ─────────────────────────────────────────
@@ -366,7 +405,7 @@ async function selectTheme(id) {
     sel.add(id);
     if (playing) { await initAudio(); if (patches[id]) active[id] = patches[id](masterGain); }
   }
-  renderAll(); updateNP();
+  renderAll(); updateNP(); updateBGM();
 }
 
 // ─── UI — render ──────────────────────────────────────────────
