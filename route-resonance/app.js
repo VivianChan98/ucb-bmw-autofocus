@@ -181,7 +181,14 @@ const patches = {
     const lfo=mkO('sine',.16), lg=mkG(.05); lfo.connect(lg); lg.connect(g.gain);
     ch(n,f,g,out); n.start(); lfo.start();
     const n2=mkN(), f2=mkF('lowpass',280), g2=mkG(.05); ch(n2,f2,g2,out); n2.start();
-    return () => { sf.s = true; n.stop(); n2.stop(); lfo.stop(); };
+    
+    // Crickets / insects
+    const cr = mkN(), crF = mkF('bandpass', 4500, 2), crG = mkG(0.02);
+    const crLfo = mkO('square', 12), crLg = mkG(0.015);
+    crLfo.connect(crLg); crLg.connect(crG.gain);
+    ch(cr, crF, crG, out); cr.start(); crLfo.start();
+    
+    return () => { sf.s = true; n.stop(); n2.stop(); lfo.stop(); cr.stop(); crLfo.stop(); };
   },
   waves(out) {
     function wl(freq,lf,la,gv) {
@@ -200,10 +207,30 @@ const patches = {
     const n=mkN(), f=mkF('lowpass',220), g=mkG(.3);
     const lfo=mkO('sine',.15), lg=mkG(.15); lfo.connect(lg); lg.connect(g.gain);
     ch(n,f,g,out); n.start(); lfo.start();
-    const n2=mkN(), f2=mkF('bandpass',800,.3), g2=mkG(.08);
-    const lfo2=mkO('sine',.05), lg2=mkG(.04); lfo2.connect(lg2); lg2.connect(g2.gain);
-    ch(n2,f2,g2,out); n2.start(); lfo2.start();
-    return () => { [n,n2,lfo,lfo2].forEach(x => x.stop()); };
+    const sf = { s: false };
+    
+    // Fast cars whooshing by with doppler effect
+    function pass() {
+      if(sf.s) return;
+      const now = audioCtx.currentTime;
+      const cn = audioCtx.createBufferSource(); cn.buffer = noiseBuffer; cn.loop = true;
+      const cf = mkF('bandpass', 900, 1.2), cg = mkG(0);
+      
+      // Pitch drop (doppler)
+      cf.frequency.setValueAtTime(1400, now);
+      cf.frequency.exponentialRampToValueAtTime(300, now + 1.2);
+      
+      // Volume swell
+      cg.gain.setValueAtTime(0, now);
+      cg.gain.linearRampToValueAtTime(.15, now + 0.5);
+      cg.gain.linearRampToValueAtTime(0, now + 1.3);
+      
+      ch(cn, cf, cg, out); cn.start(now); cn.stop(now + 1.5);
+      setTimeout(pass, 1500 + Math.random() * 4000);
+    }
+    pass();
+    
+    return () => { sf.s = true; n.stop(); lfo.stop(); };
   },
   mountain(out) {
     const n=mkN(), f=mkF('bandpass',380,.5), lfo=mkO('sine',.045), lg=mkG(280), g=mkG(.3);
@@ -217,20 +244,48 @@ const patches = {
     return () => { try { [n,n2,lfo,lfo2,hw,hv].forEach(x => x.stop()); } catch(e) {} };
   },
   city(out) {
-    const n=mkN(), f=mkF('lowpass',160), g=mkG(.16); ch(n,f,g,out); n.start();
+    const n=mkN(), f=mkF('lowpass',180), g=mkG(.18); ch(n,f,g,out); n.start();
     const sf = { s: false };
+    
+    // Cars passing by
     function cp() {
       if (sf.s) return;
       const now=audioCtx.currentTime, cn=audioCtx.createBufferSource();
       cn.buffer = noiseBuffer; cn.loop = true;
-      const cf=mkF('bandpass',750+Math.random()*350,1.4), cg=mkG(0);
-      cg.gain.setValueAtTime(0,now); cg.gain.linearRampToValueAtTime(.2,now+.55);
-      cg.gain.linearRampToValueAtTime(0,now+2.4);
-      ch(cn,cf,cg,out); cn.start(now); cn.stop(now+2.7);
-      setTimeout(cp, 2800 + Math.random() * 6000);
+      const cf=mkF('bandpass',600+Math.random()*400,1.2), cg=mkG(0);
+      cg.gain.setValueAtTime(0,now); cg.gain.linearRampToValueAtTime(.15,now+.6);
+      cg.gain.linearRampToValueAtTime(0,now+2.5);
+      ch(cn,cf,cg,out); cn.start(now); cn.stop(now+2.8);
+      setTimeout(cp, 2000 + Math.random() * 5000);
     }
     cp();
-    return () => { sf.s = true; n.stop(); };
+
+    // Distant car horns
+    function horn() {
+      if (sf.s) return;
+      const now = audioCtx.currentTime;
+      const base = 350 + Math.random() * 150;
+      const o1 = mkO('sawtooth', base), o2 = mkO('sawtooth', base * 1.12);
+      const f = mkF('lowpass', 1200), hg = mkG(0);
+      ch(o1, f, hg, out); ch(o2, f);
+      const dur = 0.2 + Math.random() * 0.4;
+      hg.gain.setValueAtTime(0, now);
+      hg.gain.linearRampToValueAtTime(0.03, now + 0.05);
+      hg.gain.setValueAtTime(0.03, now + dur - 0.05);
+      hg.gain.linearRampToValueAtTime(0, now + dur);
+      o1.start(now); o2.start(now); o1.stop(now + dur + 0.1); o2.stop(now + dur + 0.1);
+      setTimeout(horn, 4000 + Math.random() * 10000);
+    }
+    horn();
+
+    // Faint ambient siren
+    const siren = mkO('sine', 700), sg = mkG(0.015);
+    const lfo = mkO('sine', 0.2), lg = mkG(100);
+    lfo.connect(lg); lg.connect(siren.frequency);
+    ch(siren, mkF('bandpass', 700, 1), sg, out);
+    siren.start(); lfo.start();
+
+    return () => { sf.s = true; n.stop(); siren.stop(); lfo.stop(); };
   }
 };
 
@@ -388,7 +443,7 @@ async function infer() {
         'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 300,
         messages: [{
           role: 'user',
@@ -488,7 +543,7 @@ renderAll();
     let time='day', weather=null, place=null;
     ['sunrise','day','dusk','night'].forEach(t => { if(cur.has(t)) time=t; });
     ['sunny','rain','cloud','wind','snow'].forEach(w => { if(cur.has(w)) weather=w; });
-    ['forest','waves','ocean','mountain','city'].forEach(p => { if(cur.has(p)) place=p; });
+    ['forest','waves','highway','mountain','city'].forEach(p => { if(cur.has(p)) place=p; });
     return {time,weather,place};
   }
 
