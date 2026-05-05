@@ -1,37 +1,47 @@
 // ─── Data ─────────────────────────────────────────────────────
 const CATS = {
-  weather: ['rain', 'cloud', 'wind', 'snow', 'rainbow'],
+  weather: ['sunny', 'rain', 'cloud', 'wind', 'snow'],
   time:    ['sunrise', 'day', 'dusk', 'night'],
-  place:   ['forest', 'waves', 'ocean', 'mountain', 'city']
+  place:   ['forest', 'waves', 'highway', 'mountain', 'city']
 };
 const ALL_THEMES = [...CATS.weather, ...CATS.time, ...CATS.place];
-const AUTO_SET   = new Set(['waves', 'day', 'sunrise']);
+const CAT_MAP = {};
+Object.entries(CATS).forEach(([cat, ids]) => ids.forEach(id => CAT_MAP[id] = cat));
+const AUTO_SET   = new Set(['waves', 'sunrise']);
 
 const META = {
-  rain: 'Rain',     cloud: 'Overcast', wind: 'Wind',     snow: 'Snow',
-  rainbow: 'Rainbow', sunrise: 'Sunrise', day: 'Daytime', dusk: 'Dusk',
-  night: 'Night',   forest: 'Forest',  waves: 'Coastal', ocean: 'Ocean',
+  sunny: 'Sunny',   rain: 'Rain',     cloud: 'Overcast', wind: 'Wind',
+  snow: 'Snow',     sunrise: 'Sunrise', day: 'Daytime', dusk: 'Dusk',
+  night: 'Night',   forest: 'Forest',  waves: 'Coastal', highway: 'Highway',
   mountain: 'Mountain', city: 'City'
 };
 
 const ICONS = {
-  rain:     `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M10 26Q14 19 22 19Q30 19 34 26" fill="rgba(100,140,200,0.12)" stroke="#4A72A8" stroke-width=".9"/><path d="M15 33L14 38M22 33L21 38M29 33L28 38" stroke="#3A62A0" stroke-width="1.2" stroke-linecap="round"/><path d="M10 26Q8 20 13 17Q13 11 18 11Q19 7 24 7Q32 7 32 17Q37 18 36 26" fill="rgba(100,140,200,0.08)" stroke="#4A72A8" stroke-width=".9"/></svg>`,
-  cloud:    `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M12 31Q8 31 8 26Q8 21 12 19Q12 13 18 13Q22 13 24 16Q28 14 32 18Q37 18 37 24Q37 28 33 28L12 31" fill="rgba(80,90,110,0.12)" stroke="#4A4A60" stroke-width=".9"/></svg>`,
-  wind:     `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M8 17Q17 16 26 17Q31 17.5 33 16Q34 13 32 12.5Q30 12 29.5 14" fill="none" stroke="#6A6A88" stroke-width="1.2" stroke-linecap="round"/><path d="M8 22Q19 21 28 22Q34 22.5 36 21Q38 19 36 18.5Q34 18 33.5 19.5" fill="none" stroke="#6A6A88" stroke-width="1.2" stroke-linecap="round"/><path d="M8 27Q14 26 22 27Q26 27.5 28 29Q29 31 27 33" fill="none" stroke="#6A6A88" stroke-width="1.2" stroke-linecap="round"/></svg>`,
-  snow:     `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M22 9L22 35M9 22L35 22M14 14L30 30M30 14L14 30" stroke="rgba(160,200,255,0.4)" stroke-width="1.1" stroke-linecap="round"/><circle cx="22" cy="22" r="3.5" fill="rgba(160,200,255,0.25)" stroke="#88AADD" stroke-width=".9"/><circle cx="14" cy="14" r="2" fill="rgba(160,200,255,0.15)" stroke="#88AADD" stroke-width=".7"/><circle cx="30" cy="30" r="2" fill="rgba(160,200,255,0.15)" stroke="#88AADD" stroke-width=".7"/><circle cx="30" cy="14" r="2" fill="rgba(160,200,255,0.15)" stroke="#88AADD" stroke-width=".7"/><circle cx="14" cy="30" r="2" fill="rgba(160,200,255,0.15)" stroke="#88AADD" stroke-width=".7"/></svg>`,
-  rainbow:  `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M6 34A16 16 0 0 1 38 34" stroke="#C84040" stroke-width="1.3" fill="none"/><path d="M9.5 34A12.5 12.5 0 0 1 34.5 34" stroke="#D47820" stroke-width="1.3" fill="none"/><path d="M13 34A9 9 0 0 1 31 34" stroke="#88B830" stroke-width="1.3" fill="none"/><path d="M16.5 34A5.5 5.5 0 0 1 27.5 34" stroke="#3878C8" stroke-width="1.3" fill="none"/></svg>`,
-  sunrise:  `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M22 29A11 11 0 0 1 11 29" fill="rgba(220,160,50,0.1)" stroke="#C88A1A" stroke-width="1"/><path d="M22 29A11 11 0 0 0 33 29" fill="rgba(220,160,50,0.1)" stroke="#C88A1A" stroke-width="1"/><path d="M22 17L22 13M13 20L11 18M31 20L33 18" stroke="#C88A1A" stroke-width=".9" stroke-linecap="round"/><path d="M8 29L36 29" stroke="#2A2A40" stroke-width=".8"/><path d="M8 34Q14 30 22 32Q30 34 36 30" stroke="#2A5080" stroke-width=".7" fill="none" stroke-linecap="round"/></svg>`,
-  day:      `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="8" fill="rgba(250,199,80,0.25)" stroke="#C88A1A" stroke-width="1.1"/><path d="M22 7L22 11M22 33L22 37M7 22L11 22M33 22L37 22M12 12L14.8 14.8M29.2 29.2L32 32M32 12L29.2 14.8M14.8 29.2L12 32" stroke="#C88A1A" stroke-width="1.1" stroke-linecap="round"/></svg>`,
-  dusk:     `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M22 30A12 12 0 0 1 10 30" fill="rgba(200,120,40,0.1)" stroke="#A86820" stroke-width="1"/><path d="M22 30A12 12 0 0 0 34 30" fill="rgba(200,120,40,0.1)" stroke="#A86820" stroke-width="1"/><path d="M8 30L36 30" stroke="#2A2A40" stroke-width=".8"/><path d="M8 35Q14 31 22 34Q30 37 36 32" stroke="#4A3080" stroke-width=".7" fill="none" stroke-linecap="round"/><circle cx="30" cy="15" r="4" fill="rgba(200,160,255,0.1)" stroke="#6040A0" stroke-width=".8"/></svg>`,
-  night:    `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M24 10Q16 11 13 19Q10 27 17 33Q24 39 32 37Q23 38 21 32Q17 24 21 18Q22 13 29 11Q26 10 24 10Z" fill="rgba(50,100,200,0.12)" stroke="#3A62A0" stroke-width=".9"/><circle cx="31" cy="13" r="1.6" fill="#5A7ACC"/><circle cx="34" cy="23" r="1.3" fill="#5A7ACC"/><circle cx="28" cy="31" r="1.8" fill="#5A7ACC"/></svg>`,
-  forest:   `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M22 34L22 22L28 22L21 9L14 22L20 22L20 34Z" fill="rgba(60,120,20,0.2)" stroke="#4A9020" stroke-width=".9"/><path d="M12 34L12 24L10 24L17 14L17 18L21 18L13 7L8 18" fill="rgba(50,100,15,0.12)" stroke="#386010" stroke-width=".8"/><path d="M5 34L39 34" stroke="#2A3020" stroke-width=".7"/></svg>`,
-  waves:    `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M8 19Q13 13 18 19Q23 25 28 19Q33 13 38 19" stroke="#3A72B8" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M8 27Q13 21 18 27Q23 33 28 27Q33 21 38 27" stroke="#2A62A8" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M8 35Q13 29 18 35Q23 41 28 35Q33 29 38 35" stroke="#1C52A0" stroke-width="1.1" fill="none" stroke-linecap="round"/></svg>`,
-  ocean:    `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M8 28Q13 22 18 28Q23 34 28 28Q33 22 38 28" stroke="#2A62A8" stroke-width="1.3" fill="rgba(42,98,168,0.07)" stroke-linecap="round"/><path d="M8 36Q13 30 18 36Q23 42 28 36Q33 30 38 36" stroke="#1C52A0" stroke-width="1.1" fill="none" stroke-linecap="round"/><circle cx="22" cy="16" r="8" fill="rgba(220,160,50,0.08)" stroke="#A87A10" stroke-width=".9"/><path d="M22 7L22 9M22 23L22 25M14 16L16 16M28 16L30 16" stroke="#A87A10" stroke-width=".9" stroke-linecap="round"/></svg>`,
-  mountain: `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M6 37L18 16L30 37Z" fill="rgba(80,80,100,0.12)" stroke="#5A5A78" stroke-width=".9"/><path d="M23 37L32 19L41 37Z" fill="rgba(65,65,88,0.16)" stroke="#4A4A68" stroke-width=".9"/><path d="M14 24Q17 20 20 24" fill="white" stroke="rgba(200,210,240,0.5)" stroke-width=".5"/><path d="M28 26Q31 22 34 26" fill="white" stroke="rgba(200,210,240,0.5)" stroke-width=".5"/><path d="M5 37L42 37" stroke="#2A2A40" stroke-width=".7"/></svg>`,
-  city:     `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="4" y="26" width="8" height="13" fill="rgba(80,80,105,0.15)" stroke="#4A4A68" stroke-width=".8"/><rect x="14" y="18" width="11" height="21" fill="rgba(80,80,105,0.15)" stroke="#4A4A68" stroke-width=".8"/><rect x="27" y="22" width="8" height="17" fill="rgba(80,80,105,0.15)" stroke="#4A4A68" stroke-width=".8"/><rect x="37" y="25" width="5" height="14" fill="rgba(80,80,105,0.15)" stroke="#4A4A68" stroke-width=".8"/><path d="M3 39L43 39" stroke="#2A2A40" stroke-width=".7"/><rect x="16" y="23" width="3" height="3" fill="#C88A1A" opacity=".5"/><rect x="21" y="23" width="3" height="3" fill="#C88A1A" opacity=".5"/></svg>`
+  rain:     `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M10 26Q14 19 22 19Q30 19 34 26" fill="rgba(140,180,240,0.18)" stroke="#7AB4FF" stroke-width="1.1"/><path d="M15 33L14 38M22 33L21 38M29 33L28 38" stroke="#8AB4FF" stroke-width="1.4" stroke-linecap="round"/><path d="M10 26Q8 20 13 17Q13 11 18 11Q19 7 24 7Q32 7 32 17Q37 18 36 26" fill="rgba(140,180,240,0.12)" stroke="#7AB4FF" stroke-width="1.1"/></svg>`,
+  cloud:    `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M12 31Q8 31 8 26Q8 21 12 19Q12 13 18 13Q22 13 24 16Q28 14 32 18Q37 18 37 24Q37 28 33 28L12 31" fill="rgba(140,150,180,0.18)" stroke="#9A9AB0" stroke-width="1.1"/></svg>`,
+  wind:     `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M8 17Q17 16 26 17Q31 17.5 33 16Q34 13 32 12.5Q30 12 29.5 14" fill="none" stroke="#9A9AB0" stroke-width="1.4" stroke-linecap="round"/><path d="M8 22Q19 21 28 22Q34 22.5 36 21Q38 19 36 18.5Q34 18 33.5 19.5" fill="none" stroke="#9A9AB0" stroke-width="1.4" stroke-linecap="round"/><path d="M8 27Q14 26 22 27Q26 27.5 28 29Q29 31 27 33" fill="none" stroke="#9A9AB0" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+  snow:     `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M22 9L22 35M9 22L35 22M14 14L30 30M30 14L14 30" stroke="rgba(180,220,255,0.6)" stroke-width="1.3" stroke-linecap="round"/><circle cx="22" cy="22" r="3.5" fill="rgba(180,220,255,0.3)" stroke="#A0C0FF" stroke-width="1.1"/><circle cx="14" cy="14" r="2" fill="rgba(180,220,255,0.2)" stroke="#A0C0FF" stroke-width=".8"/><circle cx="30" cy="30" r="2" fill="rgba(180,220,255,0.2)" stroke="#A0C0FF" stroke-width=".8"/><circle cx="30" cy="14" r="2" fill="rgba(180,220,255,0.2)" stroke="#A0C0FF" stroke-width=".8"/><circle cx="14" cy="30" r="2" fill="rgba(180,220,255,0.2)" stroke="#A0C0FF" stroke-width=".8"/></svg>`,
+  sunny:    `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="7" fill="rgba(255,220,100,0.4)" stroke="#E8B020" stroke-width="1.3"/><path d="M22 8L22 12M22 32L22 36M8 22L12 22M32 22L36 22M13 13L15.5 15.5M28.5 28.5L31 31M31 13L28.5 15.5M15.5 28.5L13 31" stroke="#E8B020" stroke-width="1.2" stroke-linecap="round"/><circle cx="22" cy="22" r="4" fill="rgba(255,230,120,0.45)"/></svg>`,
+  sunrise:  `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M22 29A11 11 0 0 1 11 29" fill="rgba(240,180,60,0.15)" stroke="#D89A2A" stroke-width="1.2"/><path d="M22 29A11 11 0 0 0 33 29" fill="rgba(240,180,60,0.15)" stroke="#D89A2A" stroke-width="1.2"/><path d="M22 17L22 13M13 20L11 18M31 20L33 18" stroke="#D89A2A" stroke-width="1.1" stroke-linecap="round"/><path d="M8 29L36 29" stroke="#4A4A60" stroke-width="1"/><path d="M8 34Q14 30 22 32Q30 34 36 30" stroke="#3A62B0" stroke-width="1" fill="none" stroke-linecap="round"/></svg>`,
+  day:      `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="8" fill="rgba(255,210,100,0.3)" stroke="#D89A2A" stroke-width="1.3"/><path d="M22 7L22 11M22 33L22 37M7 22L11 22M33 22L37 22M12 12L14.8 14.8M29.2 29.2L32 32M32 12L29.2 14.8M14.8 29.2L12 32" stroke="#D89A2A" stroke-width="1.3" stroke-linecap="round"/></svg>`,
+  dusk:     `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M22 30A12 12 0 0 1 10 30" fill="rgba(220,140,60,0.15)" stroke="#B87830" stroke-width="1.2"/><path d="M22 30A12 12 0 0 0 34 30" fill="rgba(220,140,60,0.15)" stroke="#B87830" stroke-width="1.2"/><path d="M8 30L36 30" stroke="#4A4A60" stroke-width="1"/><path d="M8 35Q14 31 22 34Q30 37 36 32" stroke="#5A40A0" stroke-width="1" fill="none" stroke-linecap="round"/><circle cx="30" cy="15" r="4" fill="rgba(220,180,255,0.15)" stroke="#8060C0" stroke-width="1"/></svg>`,
+  night:    `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M24 10Q16 11 13 19Q10 27 17 33Q24 39 32 37Q23 38 21 32Q17 24 21 18Q22 13 29 11Q26 10 24 10Z" fill="rgba(80,130,240,0.18)" stroke="#5A8AE0" stroke-width="1.1"/><circle cx="31" cy="13" r="1.6" fill="#8AB4FF"/><circle cx="34" cy="23" r="1.3" fill="#8AB4FF"/><circle cx="28" cy="31" r="1.8" fill="#8AB4FF"/></svg>`,
+  forest:   `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M22 34L22 22L28 22L21 9L14 22L20 22L20 34Z" fill="rgba(100,180,60,0.25)" stroke="#6AB040" stroke-width="1.1"/><path d="M12 34L12 24L10 24L17 14L17 18L21 18L13 7L8 18" fill="rgba(90,160,55,0.18)" stroke="#588030" stroke-width="1"/><path d="M5 34L39 34" stroke="#4A5040" stroke-width="1"/></svg>`,
+  waves:    `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M8 19Q13 13 18 19Q23 25 28 19Q33 13 38 19" stroke="#5A92D8" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M8 27Q13 21 18 27Q23 33 28 27Q33 21 38 27" stroke="#4A82C8" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M8 35Q13 29 18 35Q23 41 28 35Q33 29 38 35" stroke="#3C72C0" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>`,
+  highway:  `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M12 36L19 14H25L32 36" stroke="#6A7280" stroke-width="2.2" stroke-linecap="round"/><path d="M22 17L22 21M22 26L22 32" stroke="#E8B020" stroke-width="1.5" stroke-linecap="round"/><path d="M6 24L38 24" stroke="#4A4A58" stroke-width="1.2"/><path d="M10 21L13 14H31L34 21" stroke="#5A5A6A" stroke-width="1" fill="rgba(120,120,140,0.12)"/></svg>`,
+  mountain: `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M6 37L18 16L30 37Z" fill="rgba(120,120,140,0.18)" stroke="#8A8AB8" stroke-width="1.1"/><path d="M23 37L32 19L41 37Z" fill="rgba(105,105,128,0.22)" stroke="#7A7A98" stroke-width="1.1"/><path d="M14 24Q17 20 20 24" fill="white" stroke="rgba(220,230,255,0.7)" stroke-width=".6"/><path d="M28 26Q31 22 34 26" fill="white" stroke="rgba(220,230,255,0.7)" stroke-width=".6"/><path d="M5 37L42 37" stroke="#4A4A60" stroke-width="1"/></svg>`,
+  city:     `<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="4" y="26" width="8" height="13" fill="rgba(120,120,145,0.2)" stroke="#7A7A98" stroke-width="1"/><rect x="14" y="18" width="11" height="21" fill="rgba(120,120,145,0.2)" stroke="#7A7A98" stroke-width="1"/><rect x="27" y="22" width="8" height="17" fill="rgba(120,120,145,0.2)" stroke="#7A7A98" stroke-width="1"/><rect x="37" y="25" width="5" height="14" fill="rgba(120,120,145,0.2)" stroke="#7A7A98" stroke-width="1"/><path d="M3 39L43 39" stroke="#4A4A60" stroke-width="1"/><rect x="16" y="23" width="3" height="3" fill="#E8B020" opacity=".7"/><rect x="21" y="23" width="3" height="3" fill="#E8B020" opacity=".7"/></svg>`
 };
 
 // ─── State ────────────────────────────────────────────────────
+const PLAYLISTS = {
+  forest:   ['music/forest.mp3'],
+  waves:    ['music/coastal.mp3'],
+  highway:  ['music/highway.mp3'],
+  mountain: ['music/mountain.mp3'],
+  city:     ['music/city.mp3']
+};
+
 let API_KEY    = '';
 let audioCtx   = null;
 let masterGain = null;
@@ -39,8 +49,36 @@ let noiseBuffer= null;
 let active     = {};
 let playing    = false;
 let autoMode   = true;
-let sel        = new Set(['waves', 'day', 'sunrise']);
+let sel        = new Set(['waves', 'sunrise']);
 let moodOpen   = false;
+
+let bgmAudio = new Audio();
+bgmAudio.loop = true;
+let currentBgmPlace = null;
+
+function updateBGM() {
+  if (!playing) {
+    bgmAudio.pause();
+    return;
+  }
+  const cur = autoMode ? AUTO_SET : sel;
+  let place = null;
+  ['forest','waves','highway','mountain','city'].forEach(p => { if(cur.has(p)) place=p; });
+  
+  if (place && PLAYLISTS[place] && PLAYLISTS[place].length > 0) {
+    if (currentBgmPlace !== place) {
+      currentBgmPlace = place;
+      const tracks = PLAYLISTS[place];
+      bgmAudio.src = tracks[Math.floor(Math.random() * tracks.length)];
+      bgmAudio.play().catch(e => console.log('BGM play blocked', e));
+    } else {
+      if (bgmAudio.paused) bgmAudio.play().catch(e => console.log('BGM play blocked', e));
+    }
+  } else {
+    bgmAudio.pause();
+    currentBgmPlace = null;
+  }
+}
 
 // ─── Audio helpers ────────────────────────────────────────────
 function mkN() { const s = audioCtx.createBufferSource(); s.buffer = noiseBuffer; s.loop = true; return s; }
@@ -125,12 +163,13 @@ const patches = {
     t();
     return () => { sf.s = true; n.stop(); lfo.stop(); };
   },
-  rainbow(out) {
-    const os = [261.6,329.6,392,523.2,659.3].map(f => {
-      const o=mkO('sine',f), g=mkG(.02); o.connect(g); g.connect(out); o.start(); return o;
+  sunny(out) {
+    const sf = { s: false }; birds(out, sf, 2800, 1000, 1400); birds(out, sf, 3400, 1800, 2000);
+    const os = [261.6,329.6,392,523.2].map(f => {
+      const o=mkO('sine',f), g=mkG(.018); o.connect(g); g.connect(out); o.start(); return o;
     });
-    const sf = { s: false }; birds(out, sf, 3000, 2500, 2000);
-    return () => { sf.s = true; os.forEach(o => o.stop()); };
+    const n=mkN(), f=mkF('lowpass',350), g=mkG(.025); ch(n,f,g,out); n.start();
+    return () => { sf.s = true; os.forEach(o => o.stop()); n.stop(); };
   },
   sunrise(out) {
     const sf = { s: false }; birds(out,sf,2700,1200,1600); birds(out,sf,3400,2000,2200);
@@ -178,7 +217,14 @@ const patches = {
     const lfo=mkO('sine',.16), lg=mkG(.05); lfo.connect(lg); lg.connect(g.gain);
     ch(n,f,g,out); n.start(); lfo.start();
     const n2=mkN(), f2=mkF('lowpass',280), g2=mkG(.05); ch(n2,f2,g2,out); n2.start();
-    return () => { sf.s = true; n.stop(); n2.stop(); lfo.stop(); };
+    
+    // Crickets / insects
+    const cr = mkN(), crF = mkF('bandpass', 4500, 2), crG = mkG(0.02);
+    const crLfo = mkO('square', 12), crLg = mkG(0.015);
+    crLfo.connect(crLg); crLg.connect(crG.gain);
+    ch(cr, crF, crG, out); cr.start(); crLfo.start();
+    
+    return () => { sf.s = true; n.stop(); n2.stop(); lfo.stop(); cr.stop(); crLfo.stop(); };
   },
   waves(out) {
     function wl(freq,lf,la,gv) {
@@ -192,17 +238,35 @@ const patches = {
     ch(n3,f3,g3,out); n3.start(); l3.start();
     return () => [n1,n2,n3,l1,l2,l3].forEach(n => n.stop());
   },
-  ocean(out) {
-    function wl(freq,lf,la,gv) {
-      const n=mkN(), f=mkF('bandpass',freq,.6), g=mkG(gv);
-      const l=mkO('sine',lf), lg=mkG(la); l.connect(lg); lg.connect(g.gain);
-      ch(n,f,g,out); n.start(); l.start(); return [n,l];
+  highway(out) {
+    // Low rumble / wind for open highway
+    const n=mkN(), f=mkF('lowpass',220), g=mkG(.3);
+    const lfo=mkO('sine',.15), lg=mkG(.15); lfo.connect(lg); lg.connect(g.gain);
+    ch(n,f,g,out); n.start(); lfo.start();
+    const sf = { s: false };
+    
+    // Fast cars whooshing by with doppler effect
+    function pass() {
+      if(sf.s) return;
+      const now = audioCtx.currentTime;
+      const cn = audioCtx.createBufferSource(); cn.buffer = noiseBuffer; cn.loop = true;
+      const cf = mkF('bandpass', 900, 1.2), cg = mkG(0);
+      
+      // Pitch drop (doppler)
+      cf.frequency.setValueAtTime(1400, now);
+      cf.frequency.exponentialRampToValueAtTime(300, now + 1.2);
+      
+      // Volume swell
+      cg.gain.setValueAtTime(0, now);
+      cg.gain.linearRampToValueAtTime(.15, now + 0.5);
+      cg.gain.linearRampToValueAtTime(0, now + 1.3);
+      
+      ch(cn, cf, cg, out); cn.start(now); cn.stop(now + 1.5);
+      setTimeout(pass, 1500 + Math.random() * 4000);
     }
-    const [n1,l1]=wl(320,.08,.18,.2), [n2,l2]=wl(550,.13,.12,.16);
-    const os = [130.8,164.8,196].map(f => {
-      const o=mkO('sine',f), g=mkG(.015); o.connect(g); g.connect(out); o.start(); return o;
-    });
-    return () => { [n1,n2,l1,l2].forEach(n => n.stop()); os.forEach(o => o.stop()); };
+    pass();
+    
+    return () => { sf.s = true; n.stop(); lfo.stop(); };
   },
   mountain(out) {
     const n=mkN(), f=mkF('bandpass',380,.5), lfo=mkO('sine',.045), lg=mkG(280), g=mkG(.3);
@@ -216,20 +280,48 @@ const patches = {
     return () => { try { [n,n2,lfo,lfo2,hw,hv].forEach(x => x.stop()); } catch(e) {} };
   },
   city(out) {
-    const n=mkN(), f=mkF('lowpass',160), g=mkG(.16); ch(n,f,g,out); n.start();
+    const n=mkN(), f=mkF('lowpass',180), g=mkG(.18); ch(n,f,g,out); n.start();
     const sf = { s: false };
+    
+    // Cars passing by
     function cp() {
       if (sf.s) return;
       const now=audioCtx.currentTime, cn=audioCtx.createBufferSource();
       cn.buffer = noiseBuffer; cn.loop = true;
-      const cf=mkF('bandpass',750+Math.random()*350,1.4), cg=mkG(0);
-      cg.gain.setValueAtTime(0,now); cg.gain.linearRampToValueAtTime(.2,now+.55);
-      cg.gain.linearRampToValueAtTime(0,now+2.4);
-      ch(cn,cf,cg,out); cn.start(now); cn.stop(now+2.7);
-      setTimeout(cp, 2800 + Math.random() * 6000);
+      const cf=mkF('bandpass',600+Math.random()*400,1.2), cg=mkG(0);
+      cg.gain.setValueAtTime(0,now); cg.gain.linearRampToValueAtTime(.15,now+.6);
+      cg.gain.linearRampToValueAtTime(0,now+2.5);
+      ch(cn,cf,cg,out); cn.start(now); cn.stop(now+2.8);
+      setTimeout(cp, 2000 + Math.random() * 5000);
     }
     cp();
-    return () => { sf.s = true; n.stop(); };
+
+    // Distant car horns
+    function horn() {
+      if (sf.s) return;
+      const now = audioCtx.currentTime;
+      const base = 350 + Math.random() * 150;
+      const o1 = mkO('sawtooth', base), o2 = mkO('sawtooth', base * 1.12);
+      const f = mkF('lowpass', 1200), hg = mkG(0);
+      ch(o1, f, hg, out); ch(o2, f);
+      const dur = 0.2 + Math.random() * 0.4;
+      hg.gain.setValueAtTime(0, now);
+      hg.gain.linearRampToValueAtTime(0.03, now + 0.05);
+      hg.gain.setValueAtTime(0.03, now + dur - 0.05);
+      hg.gain.linearRampToValueAtTime(0, now + dur);
+      o1.start(now); o2.start(now); o1.stop(now + dur + 0.1); o2.stop(now + dur + 0.1);
+      setTimeout(horn, 4000 + Math.random() * 10000);
+    }
+    horn();
+
+    // Faint ambient siren
+    const siren = mkO('sine', 700), sg = mkG(0.015);
+    const lfo = mkO('sine', 0.2), lg = mkG(100);
+    lfo.connect(lg); lg.connect(siren.frequency);
+    ch(siren, mkF('bandpass', 700, 1), sg, out);
+    siren.start(); lfo.start();
+
+    return () => { sf.s = true; n.stop(); siren.stop(); lfo.stop(); };
   }
 };
 
@@ -255,11 +347,13 @@ async function startActive() {
     if (!active[id] && patches[id]) active[id] = patches[id](masterGain);
   });
   renderAll(); updateNP();
+  updateBGM();
 }
 
 function stopAll() {
   Object.values(active).forEach(s => { try { s(); } catch(e) {} });
   active = {}; renderAll(); updateNP();
+  updateBGM();
 }
 
 // ─── UI — playback ────────────────────────────────────────────
@@ -278,6 +372,7 @@ function onAmb(v) {
 
 function onMusic(v) {
   document.getElementById('musV').textContent = Math.round(v) + '%';
+  if (bgmAudio) bgmAudio.volume = v / 100;
 }
 
 // ─── UI — auto toggle ─────────────────────────────────────────
@@ -295,14 +390,22 @@ async function selectTheme(id) {
     document.getElementById('aTrack').className = 'tog-t';
     document.getElementById('aThumb').className = 'tog-h';
   }
+  const cat = CAT_MAP[id];
   if (sel.has(id)) {
     sel.delete(id);
     if (active[id]) { try { active[id](); } catch(e) {} delete active[id]; }
   } else {
+    // Remove existing selection in same category
+    CATS[cat].forEach(other => {
+      if (sel.has(other)) {
+        sel.delete(other);
+        if (active[other]) { try { active[other](); } catch(e) {} delete active[other]; }
+      }
+    });
     sel.add(id);
     if (playing) { await initAudio(); if (patches[id]) active[id] = patches[id](masterGain); }
   }
-  renderAll(); updateNP();
+  renderAll(); updateNP(); updateBGM();
 }
 
 // ─── UI — render ──────────────────────────────────────────────
@@ -379,7 +482,7 @@ async function infer() {
         'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 300,
         messages: [{
           role: 'user',
@@ -394,7 +497,13 @@ async function infer() {
     const raw    = data.content.map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(raw);
 
-    sel = new Set((parsed.themes || []).filter(id => ALL_THEMES.includes(id)));
+    const newSel = new Set();
+    const usedCats = {};
+    (parsed.themes || []).filter(id => ALL_THEMES.includes(id)).forEach(id => {
+      const cat = CAT_MAP[id];
+      if (!usedCats[cat]) { usedCats[cat] = true; newSel.add(id); }
+    });
+    sel = newSel;
     autoMode = false;
     document.getElementById('aTrack').className = 'tog-t';
     document.getElementById('aThumb').className = 'tog-h';
@@ -435,3 +544,481 @@ function skipKey() {
 
 // ─── Init ─────────────────────────────────────────────────────
 renderAll();
+
+// ─── Driving Scene Animation ──────────────────────────────────
+(function() {
+  const cv = document.getElementById('driveCanvas');
+  if (!cv) return;
+  const c = cv.getContext('2d');
+  let W, H, fr = 0;
+  const WW = 3200;
+  const objs = [], lamps = [], pts = [];
+
+  // Generate scenery
+  for (let i = 0; i < 30; i++) {
+    objs.push({ x: Math.random()*WW, h: 10+Math.random()*14, w: 8+Math.random()*10, v: Math.floor(Math.random()*3), lit: Math.random()>.5 });
+  }
+  objs.sort((a,b) => a.x - b.x);
+  for (let i = 0; i < 16; i++) lamps.push({ x: i*(WW/16) });
+
+  function mtP(seed,n,amp) {
+    const p=[]; let s=seed;
+    for (let i=0;i<n;i++) { s=(s*16807)%2147483647; p.push(amp*(s/2147483647-0.3)); }
+    return p;
+  }
+  const mt1=mtP(42,80,22), mt2=mtP(137,80,12);
+
+  function resize() {
+    const d=window.devicePixelRatio||1;
+    W=cv.clientWidth; H=cv.clientHeight;
+    cv.width=W*d; cv.height=H*d;
+    c.setTransform(d,0,0,d,0,0);
+  }
+
+  function wrp(x,off) { return ((x-off)%WW+WW)%WW; }
+
+  function scene() {
+    const cur = autoMode ? AUTO_SET : sel;
+    let time='day', weather=null, place=null;
+    ['sunrise','day','dusk','night'].forEach(t => { if(cur.has(t)) time=t; });
+    ['sunny','rain','cloud','wind','snow'].forEach(w => { if(cur.has(w)) weather=w; });
+    ['forest','waves','highway','mountain','city'].forEach(p => { if(cur.has(p)) place=p; });
+    return {time,weather,place};
+  }
+
+  const SKIES = {
+    sunrise: ['#0B0D15','#1A1028','#3A1828','#C85828','#E8A040'],
+    day:     ['#2A5090','#4A80C0','#6AAAD8','#90D0F0','#B8F0FF'],
+    dusk:    ['#0B0D15','#14102A','#2A1828','#7A3A18','#C87828'],
+    night:   ['#040610','#060A14','#080E1A','#0A1220','#0E1828']
+  };
+  const SUNS = {
+    sunrise: {y:.36,r:8,dc:'rgba(255,200,100,0.85)',gc:'rgba(255,160,60,0.5)',gr:55},
+    day:     {y:.14,r:12,dc:'rgba(255,255,245,1)',gc:'rgba(255,250,210,0.65)',gr:85},
+    dusk:    {y:.38,r:7,dc:'rgba(255,215,140,0.85)',gc:'rgba(255,190,80,0.5)',gr:55},
+    night:   {y:.2, r:4,dc:'rgba(200,215,240,0.6)', gc:'rgba(150,170,220,0.12)',gr:30}
+  };
+  // Terrain colors by place
+  const TERRAIN = {
+    forest:   { band: ['#0E2810','#0A1E0C'], mt: ['#0C200E','#081808'], hill: ['#0A1C0C','#071406'], road: ['#1A1A20','#101014'] },
+    waves:    { band: ['#1A3050','#0F1E30'], mt: ['#152030','#0E1820'], hill: ['#0E1820','#0A1418'], road: ['#1A1A24','#111118'] },
+    highway:  { band: ['#1C1E26','#14151C'], mt: ['#1A1C24','#12141A'], hill: ['#161820','#101218'], road: ['#181A22','#101116'] },
+    mountain: { band: ['#14182A','#0E1220'], mt: ['#1A2038','#121828'], hill: ['#101828','#0C1220'], road: ['#1A1A24','#111118'] },
+    city:     { band: ['#101420','#0C1018'], mt: ['#12161E','#0E1218'], hill: ['#0E1218','#0A0E14'], road: ['#1C1C28','#14141C'] }
+  };
+
+  // Weather particles
+  function updatePts(w) {
+    const n = w==='rain'?100 : w==='snow'?60 : 0;
+    while(pts.length<n) pts.push({x:Math.random()*W,y:Math.random()*H,s:1+Math.random()*2,d:Math.random()});
+    while(pts.length>n) pts.pop();
+  }
+
+  function drawWeather(w,hY) {
+    if(w==='rain') {
+      c.strokeStyle='rgba(140,170,220,0.4)'; c.lineWidth=1;
+      pts.forEach(p => {
+        c.beginPath(); c.moveTo(p.x,p.y); c.lineTo(p.x-2,p.y+9); c.stroke();
+        p.y+=p.s*4.5; p.x-=1.2;
+        if(p.y>H){p.y=-10;p.x=Math.random()*W;}
+      });
+    } else if(w==='snow') {
+      c.fillStyle='rgba(220,230,255,0.55)';
+      pts.forEach(p => {
+        c.beginPath(); c.arc(p.x,p.y,1.3,0,6.28); c.fill();
+        p.y+=p.s*0.7; p.x+=Math.sin(fr*0.02+p.d*10)*0.5;
+        if(p.y>H){p.y=-5;p.x=Math.random()*W;}
+      });
+    } else if(w==='wind') {
+      c.strokeStyle='rgba(180,190,210,0.15)'; c.lineWidth=0.8;
+      for(let i=0;i<10;i++) {
+        const wy=H*0.15+(i*31+fr*0.8)%(H*0.75);
+        const wx=(i*110+fr*3.5)%(W+120)-60;
+        c.beginPath(); c.moveTo(wx,wy); c.lineTo(wx+25+i*3,wy-0.5); c.stroke();
+      }
+    } else if(w==='cloud') {
+      c.fillStyle='rgba(60,70,90,0.3)';
+      for(let i=0;i<4;i++) {
+        const cx=((i*300+fr*0.3)%(W+200))-100, cy=hY*0.25+i*7;
+        c.beginPath(); c.ellipse(cx,cy,45,13,0,0,6.28); c.fill();
+        c.beginPath(); c.ellipse(cx+22,cy-7,28,10,0,0,6.28); c.fill();
+      }
+    } else if(w==='sunny') {
+      // Extra sun rays / lens flare effect
+      const sx=W*0.73, sy=H*0.18;
+      c.save(); c.globalAlpha=0.12;
+      for(let i=0;i<8;i++) {
+        const a=fr*0.005+i*0.785;
+        c.strokeStyle='rgba(255,220,100,0.3)'; c.lineWidth=1.5;
+        c.beginPath(); c.moveTo(sx+Math.cos(a)*15,sy+Math.sin(a)*15);
+        c.lineTo(sx+Math.cos(a)*(35+Math.sin(fr*0.03+i)*8),sy+Math.sin(a)*(35+Math.sin(fr*0.03+i)*8));
+        c.stroke();
+      }
+      c.restore();
+    }
+  }
+
+  // BMW car
+  function drawCar(cx,cy) {
+    const b=Math.sin(fr*0.08)*0.5;
+    c.save(); c.translate(cx,cy+b); c.scale(-1,1);
+    // Shadow
+    c.fillStyle='rgba(0,0,0,0.25)';
+    c.beginPath(); c.ellipse(0,4,26,3,0,0,6.28); c.fill();
+    // Body
+    c.beginPath();
+    c.moveTo(-26,0); c.lineTo(-28,-3); c.quadraticCurveTo(-26,-7,-20,-7);
+    c.lineTo(-11,-7); c.lineTo(-8,-13); c.quadraticCurveTo(-5,-16,1,-16);
+    c.lineTo(11,-16); c.quadraticCurveTo(15,-16,17,-13); c.lineTo(21,-7);
+    c.lineTo(26,-7); c.quadraticCurveTo(29,-5,28,-2); c.lineTo(28,0);
+    c.closePath();
+    c.fillStyle='#1C3A6A'; c.fill();
+    c.strokeStyle='rgba(80,130,210,0.25)'; c.lineWidth=0.6; c.stroke();
+    // Front window
+    c.beginPath();
+    c.moveTo(-9,-8); c.lineTo(-6,-14); c.quadraticCurveTo(-4,-15,0,-15);
+    c.lineTo(3,-15); c.lineTo(3,-8); c.closePath();
+    c.fillStyle='rgba(80,140,220,0.2)'; c.fill();
+    // Rear window
+    c.beginPath();
+    c.moveTo(5,-8); c.lineTo(5,-15); c.lineTo(10,-15);
+    c.quadraticCurveTo(13,-15,15,-12); c.lineTo(18,-8); c.closePath();
+    c.fillStyle='rgba(80,140,220,0.18)'; c.fill();
+    // Wheels
+    [[-14,1],[16,1]].forEach(([wx,wy]) => {
+      c.beginPath(); c.arc(wx,wy,4.5,0,6.28); c.fillStyle='#0A0A10'; c.fill();
+      c.beginPath(); c.arc(wx,wy,3,0,6.28); c.fillStyle='#22222A'; c.fill();
+      // Spinning spokes
+      for(let s=0;s<5;s++) {
+        const a=fr*0.15+s*1.256;
+        c.strokeStyle='rgba(160,160,180,0.2)'; c.lineWidth=0.5;
+        c.beginPath(); c.moveTo(wx,wy); c.lineTo(wx+Math.cos(a)*2.5,wy+Math.sin(a)*2.5); c.stroke();
+      }
+    });
+    // Headlight beam
+    c.fillStyle='rgba(255,230,160,0.08)';
+    c.beginPath(); c.moveTo(-28,-4); c.lineTo(-60,-8); c.lineTo(-60,2); c.closePath(); c.fill();
+    // Headlight
+    c.fillStyle='rgba(255,220,150,0.7)'; c.fillRect(-28,-5,2,2);
+    // Tail light
+    c.fillStyle='rgba(220,40,40,0.6)'; c.fillRect(27,-5,2,2);
+    // BMW grille hint
+    c.fillStyle='rgba(0,0,0,0.4)';
+    c.fillRect(-27,-5,2,2); c.fillRect(-25,-5,2,2);
+    c.restore();
+  }
+
+  // Place-specific object drawing
+  function drawSceneryObj(x,y,o,place,isNight) {
+    const h=o.h, w=o.w;
+    if(place==='city') {
+      // City buildings - taller, with windows
+      const bh=h*1.6, bw=w*1.2;
+      c.fillStyle=isNight?'#141824':'#1E2230';
+      c.fillRect(x-bw/2,y-bh,bw,bh);
+      c.strokeStyle='rgba(255,255,255,0.04)'; c.lineWidth=0.5;
+      c.strokeRect(x-bw/2,y-bh,bw,bh);
+      // Windows grid
+      const wc=o.lit?'rgba(240,200,80,0.55)':'rgba(120,170,240,0.2)';
+      const wOff=isNight?'rgba(240,190,80,0.5)':'rgba(120,160,220,0.12)';
+      for(let wy=y-bh+3;wy<y-2;wy+=5) {
+        for(let wx=x-bw/2+2;wx<x+bw/2-3;wx+=5) {
+          c.fillStyle=Math.random()>0.35?wc:wOff;
+          c.fillRect(wx,wy,2.5,2.5);
+        }
+      }
+      // Antenna on tall buildings
+      if(bh>20) { c.strokeStyle='#3A3A4A'; c.lineWidth=0.8; c.beginPath(); c.moveTo(x,y-bh); c.lineTo(x,y-bh-6); c.stroke(); }
+    } else if(place==='forest') {
+      // Dense forest trees
+      const treeH=h*1.4;
+      c.fillStyle='#1A2818'; c.fillRect(x-1.5,y-treeH*0.3,3,treeH*0.3);
+      // Layered canopy
+      for(let layer=0;layer<3;layer++) {
+        const ly=y-treeH+layer*treeH*0.2, lw=4+layer*2.5;
+        c.beginPath(); c.moveTo(x,ly); c.lineTo(x-lw,ly+treeH*0.25); c.lineTo(x+lw,ly+treeH*0.25);
+        c.closePath(); c.fillStyle=layer===0?'#1E4020':'#2A4828'; c.fill();
+      }
+    } else if(place==='mountain') {
+      // Rocky outcrops and sparse shrubs
+      if(o.v%3===0) {
+        // Rock
+        c.beginPath(); c.moveTo(x-5,y); c.lineTo(x-3,y-h*0.5); c.lineTo(x+1,y-h*0.6);
+        c.lineTo(x+4,y-h*0.3); c.lineTo(x+6,y); c.closePath();
+        c.fillStyle='#282830'; c.fill();
+      } else {
+        // Small alpine shrub
+        c.beginPath(); c.ellipse(x,y-2,5,3,0,0,6.28);
+        c.fillStyle='#1E2C1A'; c.fill();
+      }
+    } else if(place==='highway') {
+      // Occasional power lines or billboards
+      if(o.v%5===0) {
+        c.fillStyle='#2A2824'; c.fillRect(x-2,y-24,4,24);
+        c.fillStyle='#1A1814'; c.fillRect(x-12,y-18,24,2);
+        c.fillStyle='#1A1814'; c.fillRect(x-16,y-24,32,2);
+      } else if(o.v%6===0) {
+        c.fillStyle='#3A3A4A'; c.fillRect(x-8,y-18,3,18); c.fillRect(x+5,y-18,3,18);
+        c.fillStyle='#223080'; c.fillRect(x-14,y-32,28,14);
+        c.fillStyle='rgba(255,255,255,0.15)'; c.fillRect(x-10,y-28,20,6);
+      }
+    } else {
+      // Coastal default - mixed vegetation
+      if(o.v%5<2) {
+        // Pine
+        c.fillStyle='#2A3828'; c.fillRect(x-1,y-h*0.35,2,h*0.35);
+        c.beginPath(); c.moveTo(x,y-h); c.lineTo(x-6,y-h*0.2); c.lineTo(x+6,y-h*0.2);
+        c.closePath(); c.fillStyle='#2A4828'; c.fill();
+      } else if(o.v%5===2) {
+        // Cypress
+        c.beginPath(); c.moveTo(x,y-h);
+        c.quadraticCurveTo(x-3.5,y-h*0.4,x-2.5,y); c.lineTo(x+2.5,y);
+        c.quadraticCurveTo(x+3.5,y-h*0.4,x,y-h);
+        c.fillStyle='#1E3820'; c.fill();
+      } else if(o.v%5===3) {
+        // Small building
+        c.fillStyle='#1E2230'; c.fillRect(x-w/2,y-h,w,h);
+        c.fillStyle=o.lit?'rgba(240,190,80,0.5)':'rgba(120,160,220,0.2)';
+        c.fillRect(x-w/4,y-h+3,3,3);
+        if(w>10) c.fillRect(x+2,y-h+3,3,3);
+      } else {
+        // Road sign
+        c.fillStyle='#3A3A4A'; c.fillRect(x-0.5,y-16,1.5,16);
+        c.fillStyle='#2240A0'; c.fillRect(x-6,y-19,12,8);
+        c.fillStyle='rgba(255,255,255,0.2)'; c.fillRect(x-3,y-17,6,4);
+      }
+    }
+  }
+
+  // City skyline (drawn at horizon for city place)
+  function drawCitySkyline(hY,rY,isNight) {
+    const skyOff=(fr*0.08)%600;
+    const rng=[28,18,42,15,35,22,48,20,30,14,38,25,45,16,32,20,40,18,28,35];
+    for(let i=0;i<20;i++) {
+      const bx=i*52-skyOff;
+      if(bx<-60||bx>W+60) continue;
+      const bh=rng[i]; const bw=16+i%3*8;
+      c.fillStyle=isNight?'#0C1018':'#141822';
+      c.fillRect(bx-bw/2,rY-bh,bw,bh+2);
+      // Windows
+      if(isNight) {
+        for(let wy=rY-bh+2;wy<rY-1;wy+=4) {
+          for(let wx=bx-bw/2+2;wx<bx+bw/2-2;wx+=4) {
+            c.fillStyle=Math.random()>0.4?'rgba(240,200,80,0.35)':'rgba(80,120,180,0.08)';
+            c.fillRect(wx,wy,2,2);
+          }
+        }
+      }
+    }
+  }
+
+  // Ocean waves
+  function drawOceanWaves(hY,rY,isNight) {
+    c.save();
+    const waveCol=isNight?'rgba(40,80,140,0.2)':'rgba(60,120,180,0.15)';
+    c.strokeStyle=waveCol; c.lineWidth=1;
+    for(let row=0;row<4;row++) {
+      const wy=hY+4+row*(rY-hY)/4;
+      const wOff=fr*(0.4+row*0.15);
+      c.beginPath();
+      for(let x=0;x<W;x+=3) {
+        const yy=wy+Math.sin((x+wOff)*0.04)*2+Math.sin((x+wOff*0.7)*0.07)*1.5;
+        x===0?c.moveTo(x,yy):c.lineTo(x,yy);
+      }
+      c.stroke();
+    }
+    c.restore();
+  }
+
+  function draw() {
+    c.clearRect(0,0,W,H);
+    const sc = scene();
+    const hY=H*0.38, rY=H*0.52;
+    updatePts(sc.weather);
+
+    // Sky
+    const skyC = SKIES[sc.time]||SKIES.day;
+    const sky = c.createLinearGradient(0,0,0,hY+8);
+    [0,0.25,0.5,0.8,1].forEach((s,i) => sky.addColorStop(s,skyC[i]));
+    c.fillStyle=sky; c.fillRect(0,0,W,hY+8);
+
+    // Stars (brighter at night/dusk)
+    const starA = sc.time==='night'?0.5 : sc.time==='dusk'?0.25 : sc.time==='sunrise'?0.15 : 0.05;
+    c.fillStyle=`rgba(255,255,255,${starA})`;
+    [[.08,.1],[.22,.18],[.42,.07],[.58,.14],[.78,.2],[.92,.08],[.35,.12],[.65,.06]].forEach(([px,py]) => {
+      c.beginPath(); c.arc(W*px,H*py,0.8,0,6.28); c.fill();
+    });
+
+    // Moon for night
+    if(sc.time==='night') {
+      const mx=W*0.78, my=H*0.15;
+      const mg=c.createRadialGradient(mx,my,0,mx,my,25);
+      mg.addColorStop(0,'rgba(200,215,240,0.15)'); mg.addColorStop(1,'transparent');
+      c.fillStyle=mg; c.beginPath(); c.arc(mx,my,25,0,6.28); c.fill();
+      c.beginPath(); c.arc(mx,my,5,0,6.28);
+      c.fillStyle='rgba(200,215,240,0.6)'; c.fill();
+    }
+
+    // Sun (not at night)
+    if(sc.time!=='night') {
+      const sn=SUNS[sc.time], sx=W*0.73, sy=hY*sn.y/0.38;
+      const gl=c.createRadialGradient(sx,sy,0,sx,sy,sn.gr);
+      gl.addColorStop(0,sn.gc); gl.addColorStop(0.35,'rgba(255,140,50,0.08)'); gl.addColorStop(1,'transparent');
+      c.fillStyle=gl; c.fillRect(sx-sn.gr,sy-sn.gr,sn.gr*2,sn.gr+5);
+      c.beginPath(); c.arc(sx,sy,sn.r,0,6.28); c.fillStyle=sn.dc; c.fill();
+    }
+
+    // Terrain band - changes per place
+    const pl = sc.place||'waves';
+    const tr = TERRAIN[pl]||TERRAIN.waves;
+    const isNight = sc.time==='night';
+    const og=c.createLinearGradient(0,hY,0,rY);
+    og.addColorStop(0,isNight?'#080E18':tr.band[0]);
+    og.addColorStop(1,isNight?'#060A10':tr.band[1]);
+    c.fillStyle=og; c.fillRect(0,hY,W,rY-hY);
+
+    // Place-specific mid-ground
+    if(pl==='highway') {
+      // Distant powerlines stretching
+      c.save(); c.strokeStyle=isNight?'rgba(255,255,255,0.03)':'rgba(0,0,0,0.1)'; c.lineWidth=0.5;
+      const pOff=(fr*0.1)%40;
+      for(let i=0;i<4;i++) {
+        const wy=hY+3+i*3;
+        c.beginPath(); c.moveTo(0,wy); c.lineTo(W,wy); c.stroke();
+      }
+      c.restore();
+    } else if(pl==='waves') {
+      // Coastal water shimmer
+      c.save(); c.globalAlpha=isNight?0.05:0.1;
+      c.strokeStyle=isNight?'#4A6080':'#C89040'; c.lineWidth=0.6;
+      for(let i=0;i<10;i++) {
+        const wy=hY+3+(i%4)*4, wx=W*0.7-15+Math.sin(fr*0.04+i*1.5)*6, ww=18-i*1.5;
+        if(ww>2){c.beginPath();c.moveTo(wx-ww/2,wy);c.lineTo(wx+ww/2,wy);c.stroke();}
+      }
+      c.restore();
+    } else if(pl==='city') {
+      drawCitySkyline(hY,rY,isNight);
+    } else if(pl==='forest') {
+      // Dense treeline at horizon
+      const tlOff=(fr*0.2)%200;
+      c.fillStyle=isNight?'#06120A':'#0E2210';
+      for(let i=0;i<40;i++) {
+        const tx=i*28-tlOff, th=6+Math.sin(i*2.3)*3+Math.cos(i*1.7)*2;
+        c.beginPath(); c.moveTo(tx,hY+2); c.lineTo(tx-4,hY+2);
+        c.lineTo(tx-2,hY-th); c.lineTo(tx,hY+2); c.fill();
+        c.beginPath(); c.moveTo(tx+6,hY+2); c.lineTo(tx+2,hY+2);
+        c.lineTo(tx+4,hY-th*0.8); c.lineTo(tx+6,hY+2); c.fill();
+      }
+    }
+
+    // Mountains - vary amplitude by place
+    const mtAmp = pl==='mountain'?2.2 : pl==='city'?0 : pl==='highway'?0.3 : pl==='forest'?0.6 : 1;
+    if(mtAmp>0) {
+      const mOff=(fr*0.12)%300;
+      c.beginPath(); c.moveTo(-10,hY+4);
+      const mS=(W+320)/mt1.length;
+      for(let i=0;i<mt1.length;i++) c.lineTo(i*mS-mOff%mS-10,hY-mt1[i]*mtAmp);
+      c.lineTo(W+10,hY+4); c.closePath();
+      c.fillStyle=isNight?tr.mt[1]:tr.mt[0]; c.fill();
+      // Snow caps for mountain
+      if(pl==='mountain') {
+        c.save(); c.globalAlpha=0.35;
+        const mOff2=(fr*0.12)%300;
+        for(let i=0;i<mt1.length;i++) {
+          const px=i*mS-mOff2%mS-10, py=hY-mt1[i]*mtAmp;
+          if(mt1[i]*mtAmp>12) {
+            c.fillStyle='rgba(200,210,230,0.4)';
+            c.beginPath(); c.moveTo(px,py); c.lineTo(px-3,py+5); c.lineTo(px+3,py+5); c.closePath(); c.fill();
+          }
+        }
+        c.restore();
+      }
+    }
+
+    // Near hills
+    const hillAmp = pl==='city'?0 : pl==='mountain'?1.5 : pl==='forest'?1.2 : pl==='highway'?0.2 : 1;
+    if(hillAmp>0) {
+      const hOff=(fr*0.35)%250;
+      c.beginPath(); c.moveTo(-10,rY+2);
+      const hS=(W+300)/mt2.length;
+      for(let i=0;i<mt2.length;i++) c.lineTo(i*hS-hOff%hS-10,rY-mt2[i]*hillAmp-2);
+      c.lineTo(W+10,rY+2); c.closePath();
+      c.fillStyle=isNight?tr.hill[1]:tr.hill[0]; c.fill();
+    }
+
+    // Road
+    const rg=c.createLinearGradient(0,rY,0,H);
+    rg.addColorStop(0,isNight?'#101018':tr.road[0]);
+    rg.addColorStop(1,isNight?'#0A0A10':tr.road[1]);
+    c.fillStyle=rg; c.fillRect(0,rY,W,H-rY);
+
+    // City: highway guardrail
+    if(pl==='city') {
+      c.strokeStyle='rgba(255,255,255,0.06)'; c.lineWidth=1;
+      c.beginPath(); c.moveTo(0,rY+2); c.lineTo(W,rY+2); c.stroke();
+      // Guardrail posts
+      const grOff=(fr*2.8)%80;
+      c.strokeStyle='rgba(255,255,255,0.08)'; c.lineWidth=1;
+      for(let x=-grOff;x<W+10;x+=80) {
+        c.beginPath(); c.moveTo(x,rY); c.lineTo(x,rY+6); c.stroke();
+      }
+    }
+
+    // Road edge
+    c.strokeStyle='rgba(255,255,255,0.07)'; c.lineWidth=1;
+    c.beginPath(); c.moveTo(0,rY); c.lineTo(W,rY); c.stroke();
+
+    // Center dashes
+    const dY=rY+(H-rY)*0.38, dOff=(fr*2.8)%55;
+    c.strokeStyle='rgba(255,255,255,0.13)'; c.lineWidth=1.5;
+    for(let x=-dOff;x<W+30;x+=55){c.beginPath();c.moveTo(x,dY);c.lineTo(x+28,dY);c.stroke();}
+
+    // Scenery objects
+    const fOff=(fr*1.4)%WW;
+    const objSpacing = pl==='forest'?0.7 : pl==='city'?0.5 : pl==='highway'?1.8 : 1;
+    objs.forEach(o => {
+      const x=wrp(o.x*objSpacing,fOff*objSpacing);
+      if(x>W+40) return;
+      drawSceneryObj(x,rY,o,pl,isNight);
+    });
+
+    // Lamp posts (more in city, fewer in forest/mountain)
+    const lOff=(fr*2.8)%WW;
+    const lampGlow = isNight?0.45 : sc.time==='dusk'?0.35 : 0.2;
+    const showLamps = pl==='highway' ? false : true;
+    if(showLamps) {
+      const lampArr = pl==='city' ? [...lamps,...lamps.map(l=>({x:l.x+WW/32}))] : lamps;
+      lampArr.forEach(l => {
+        const x=wrp(l.x,lOff);
+        if(x>W+20) return;
+        const py=rY+(H-rY)*0.18;
+        c.strokeStyle=pl==='city'?'#4A4A5A':'#3A3A50'; c.lineWidth=1.5;
+        c.beginPath(); c.moveTo(x,py); c.lineTo(x,py-18); c.lineTo(x+6,py-20); c.stroke();
+        const lg=c.createRadialGradient(x+6,py-20,0,x+6,py-20,14);
+        lg.addColorStop(0,`rgba(255,200,100,${lampGlow})`); lg.addColorStop(1,'transparent');
+        c.fillStyle=lg; c.beginPath(); c.arc(x+5,py-18,12,0,6.28); c.fill();
+      });
+    }
+
+    // BMW car
+    const carX=W*0.28, carY=rY+(H-rY)*0.55;
+    drawCar(carX,carY);
+
+    // Weather overlay
+    drawWeather(sc.weather,hY);
+
+    // Vignette
+    const vg=c.createLinearGradient(0,0,0,H);
+    vg.addColorStop(0,'rgba(7,8,14,0.3)'); vg.addColorStop(0.3,'transparent');
+    vg.addColorStop(0.7,'transparent'); vg.addColorStop(1,'rgba(7,8,14,0.5)');
+    c.fillStyle=vg; c.fillRect(0,0,W,H);
+
+    fr++;
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  window.addEventListener('resize',resize);
+  draw();
+})();
+
