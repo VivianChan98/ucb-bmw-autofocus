@@ -6,7 +6,6 @@
   <title>Restaurant Drive — Journey Archive · BMW</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ── Roadmap visual styles — route-resonance dark scheme ── */
     :root {
       --bg:      #07080E;
       --surface: #0D0E18;
@@ -29,33 +28,23 @@
     }
 
     .road-screen .hero { padding: 28px 32px 12px; }
-
     .road-screen .hero-date {
-      font-family: var(--font); font-size: 10px;
-      color: var(--text2); letter-spacing: 2.5px; margin-bottom: 8px;
-      text-transform: uppercase;
+      font-size: 10px; color: var(--text2);
+      letter-spacing: 2.5px; margin-bottom: 8px; text-transform: uppercase;
     }
     .road-screen .hero-title {
-      font-family: var(--font); font-weight: 500;
-      font-size: 30px; line-height: 1.15; margin-bottom: 8px;
+      font-weight: 500; font-size: 30px; line-height: 1.15; margin-bottom: 8px;
     }
     .road-screen .hero-title em { font-style: normal; color: var(--accent); }
     .road-screen .hero-sub { font-size: 13px; color: var(--text2); line-height: 1.6; }
-
     .road-screen .hero-stats { display: flex; gap: 28px; margin-top: 16px; }
     .road-screen .stat { display: flex; flex-direction: column; gap: 2px; }
-    .road-screen .stat-val {
-      font-family: var(--font); font-size: 18px;
-      color: var(--text); font-weight: 500;
-    }
-    .road-screen .stat-label {
-      font-size: 9px; text-transform: uppercase;
-      letter-spacing: 2px; color: var(--text2);
-    }
+    .road-screen .stat-val { font-size: 18px; color: var(--text); font-weight: 500; }
+    .road-screen .stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: var(--text2); }
 
     .road-screen .hint {
       padding: 10px 32px 0;
-      font-family: var(--font); font-size: 10px; color: var(--text2);
+      font-size: 10px; color: var(--text2);
       display: flex; align-items: center; gap: 8px;
     }
     .road-screen .hint-pulse {
@@ -65,22 +54,18 @@
     }
     @keyframes rs-blink { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-    .road-screen .road-wrap { position: relative; width: 100%; padding: 16px 0 0; }
-    .road-screen .road-svg-outer {
-      width: 100%; overflow-x: auto; padding: 0 32px; scrollbar-width: none;
-    }
-    .road-screen .road-svg-outer::-webkit-scrollbar { display: none; }
+    .road-screen .road-wrap { position: relative; width: 100%; padding: 16px 32px 0; }
     .road-screen .road-canvas { border-radius: 16px; overflow: hidden; }
-    .road-screen svg.road { display: block; min-width: 940px; width: 100%; height: auto; overflow: visible; }
+    .road-screen .drive-scene {
+      height: 200px; position: relative; overflow: hidden;
+      background: #000; cursor: crosshair;
+    }
+    .road-screen .drive-scene canvas { width: 100%; height: 100%; display: block; }
 
-    .road-screen .light-zone { cursor: pointer; transition: opacity 0.15s; }
-    .road-screen .light-zone:hover { opacity: 0.85; }
-
-    .road-screen .legend { display: flex; gap: 20px; padding: 14px 32px 20px; }
+    .road-screen .legend { display: flex; gap: 20px; padding: 14px 0 20px; }
     .road-screen .legend-item {
       display: flex; align-items: center; gap: 7px;
-      font-family: var(--font); font-size: 9px;
-      color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase;
+      font-size: 9px; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase;
     }
     .road-screen .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .road-screen .legend-dot.red   { background: var(--red);   box-shadow: 0 0 6px var(--red); }
@@ -102,8 +87,7 @@
 
     .mem-signal {
       display: inline-flex; align-items: center; gap: 5px;
-      font-family: var(--font); font-size: 9px;
-      letter-spacing: 2px; text-transform: uppercase;
+      font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
       margin-bottom: 12px; padding: 4px 8px; border-radius: 20px;
     }
     .mem-signal.red   { color: var(--red);   background: rgba(224,112,112,0.12); border: 1px solid rgba(224,112,112,0.3); }
@@ -113,13 +97,12 @@
     .mem-signal.green .mem-signal-dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
 
     .mem-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
-    .mem-time  { font-family: var(--font); font-size: 11px; color: var(--text2); }
-    .mem-speed { font-family: var(--font); font-size: 22px; color: var(--warm); font-weight: 500; line-height: 1; }
+    .mem-time  { font-size: 11px; color: var(--text2); }
+    .mem-speed { font-size: 22px; color: var(--warm); font-weight: 500; line-height: 1; }
     .mem-speed span { font-size: 10px; color: var(--text2); margin-left: 2px; }
 
     .mem-snippet {
-      font-family: var(--font); font-size: 13px; line-height: 1.55;
-      color: var(--text); margin-bottom: 14px;
+      font-size: 13px; line-height: 1.55; color: var(--text); margin-bottom: 14px;
       border-left: 2px solid rgba(28,105,212,0.35); padding-left: 10px;
     }
 
@@ -138,7 +121,7 @@
       font-size: 11px; font-weight: 600; color: var(--text);
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;
     }
-    .mem-song-artist { font-family: var(--font); font-size: 9px; color: var(--text2); }
+    .mem-song-artist { font-size: 9px; color: var(--text2); }
 
     .mem-fact {
       margin-top: 12px; padding: 10px 12px;
@@ -151,9 +134,7 @@
       font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
       color: var(--accent); margin-bottom: 6px; font-weight: 500;
     }
-    .mem-fact-text {
-      font-size: 11px; line-height: 1.55; color: var(--text2);
-    }
+    .mem-fact-text { font-size: 11px; line-height: 1.55; color: var(--text2); }
 
     .waveform { display: flex; align-items: center; gap: 2px; height: 18px; }
     .waveform-bar {
@@ -225,12 +206,12 @@
     <div class="tb-right">
       <div style="text-align:right">
         <div style="font-size:13px;font-weight:500;color:#EEEEF2">Restaurant Drive</div>
-        <div style="font-size:10px;color:#6d6d7d;margin-top:3px">Memorable moments from the dining journey</div>
+        <div style="font-size:10px;color:#3A3A55;margin-top:3px">Berkeley → Oakland · Mar 14</div>
       </div>
     </div>
   </div>
 
-  <!-- Roadmap visual -->
+  <!-- Road screen -->
   <div class="road-screen">
 
     <div class="hero">
@@ -259,198 +240,15 @@
 
     <div class="hint">
       <div class="hint-pulse"></div>
-      drag your car along the road
+      hover or drag across the scene to explore moments
     </div>
 
     <div class="road-wrap">
-      <div class="road-svg-outer">
       <div class="road-canvas">
-      <svg class="road" viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#0d1929"/>
-            <stop offset="100%" stop-color="#111f30"/>
-          </linearGradient>
-          <linearGradient id="road-grad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stop-color="#181e28"/>
-            <stop offset="48%"  stop-color="#1e2636"/>
-            <stop offset="100%" stop-color="#181e28"/>
-          </linearGradient>
-          <filter id="glow-w" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="5" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glow-r" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="5" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glow-g" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="5" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glow-s" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="3" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <radialGradient id="h-warm" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stop-color="#a0c8f0" stop-opacity="0.4"/>
-            <stop offset="100%" stop-color="#a0c8f0" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="cone-warm" cx="50%" cy="0%" r="65%" fx="50%" fy="0%">
-            <stop offset="0%"   stop-color="#a0c8f0" stop-opacity="0.22"/>
-            <stop offset="100%" stop-color="#a0c8f0" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="h-red" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stop-color="#e07070" stop-opacity="0.2"/>
-            <stop offset="100%" stop-color="#e07070" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="h-green" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stop-color="#70c8a0" stop-opacity="0.2"/>
-            <stop offset="100%" stop-color="#70c8a0" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
-
-        <!-- sky -->
-        <rect width="1000" height="340" fill="url(#sky)"/>
-        <ellipse cx="160" cy="50" rx="80" ry="22" fill="#1e3a5a" opacity="0.35"/>
-        <ellipse cx="220" cy="44" rx="55" ry="16" fill="#1e3a5a" opacity="0.25"/>
-        <ellipse cx="600" cy="38" rx="100" ry="26" fill="#1e3a5a" opacity="0.3"/>
-        <ellipse cx="670" cy="32" rx="65" ry="18" fill="#1e3a5a" opacity="0.2"/>
-        <ellipse cx="860" cy="55" rx="70" ry="20" fill="#1e3a5a" opacity="0.25"/>
-        <ellipse cx="500" cy="186" rx="420" ry="18" fill="#1c3a5a" opacity="0.3"/>
-
-        <!-- road -->
-        <rect x="0" y="186" width="1000" height="90" fill="url(#road-grad)"/>
-        <line x1="0" y1="186" x2="1000" y2="186" stroke="#2a3545" stroke-width="1.5"/>
-        <line x1="0" y1="276" x2="1000" y2="276" stroke="#2a3545" stroke-width="1.5"/>
-        <line x1="0" y1="188" x2="1000" y2="188" stroke="#222e3e" stroke-width="0.8"/>
-        <line x1="0" y1="274" x2="1000" y2="274" stroke="#222e3e" stroke-width="0.8"/>
-        <line x1="0" y1="231" x2="1000" y2="231" stroke="#3a4a60" stroke-width="1.5" stroke-dasharray="26,16"/>
-        <rect x="0" y="276" width="1000" height="64" fill="#0a120e"/>
-
-        <!-- light cones -->
-        <ellipse cx="80"  cy="228" rx="55" ry="18" fill="url(#cone-warm)"/>
-        <ellipse cx="220" cy="228" rx="55" ry="18" fill="url(#cone-warm)"/>
-        <ellipse cx="360" cy="228" rx="55" ry="18" fill="url(#cone-warm)"/>
-        <ellipse cx="500" cy="228" rx="55" ry="18" fill="url(#cone-warm)"/>
-        <ellipse cx="640" cy="228" rx="55" ry="18" fill="url(#cone-warm)"/>
-        <ellipse cx="780" cy="228" rx="55" ry="18" fill="url(#cone-warm)"/>
-        <ellipse cx="920" cy="228" rx="55" ry="18" fill="url(#cone-warm)"/>
-
-        <!-- LIGHT 1 · x=80 · RED -->
-        <ellipse cx="80" cy="106" rx="52" ry="38" fill="url(#h-warm)" opacity="0.8"/>
-        <ellipse cx="80" cy="90"  rx="30" ry="22" fill="url(#h-red)"/>
-        <line x1="80" y1="276" x2="80" y2="128" stroke="#2a3848" stroke-width="3" stroke-linecap="round"/>
-        <line x1="80" y1="128" x2="108" y2="118" stroke="#2a3848" stroke-width="2.5" stroke-linecap="round"/>
-        <ellipse cx="111" cy="117" rx="7" ry="4" fill="#a0c8f0" filter="url(#glow-w)"/>
-        <ellipse cx="111" cy="117" rx="4" ry="2.5" fill="#e8f4fc"/>
-        <rect x="72" y="80" width="9" height="22" rx="2.5" fill="#1a2230" stroke="#2a3848" stroke-width="1"/>
-        <circle cx="76.5" cy="85" r="3" fill="#e07070" filter="url(#glow-r)"/>
-        <circle cx="76.5" cy="97" r="3" fill="#0e1e18" stroke="#162818" stroke-width="0.8"/>
-
-        <!-- LIGHT 2 · x=220 · GREEN -->
-        <ellipse cx="220" cy="106" rx="52" ry="38" fill="url(#h-warm)" opacity="0.8"/>
-        <ellipse cx="220" cy="88"  rx="30" ry="22" fill="url(#h-green)"/>
-        <line x1="220" y1="276" x2="220" y2="128" stroke="#2a3848" stroke-width="3" stroke-linecap="round"/>
-        <line x1="220" y1="128" x2="248" y2="118" stroke="#2a3848" stroke-width="2.5" stroke-linecap="round"/>
-        <ellipse cx="251" cy="117" rx="7" ry="4" fill="#a0c8f0" filter="url(#glow-w)"/>
-        <ellipse cx="251" cy="117" rx="4" ry="2.5" fill="#e8f4fc"/>
-        <rect x="212" y="80" width="9" height="22" rx="2.5" fill="#1a2230" stroke="#2a3848" stroke-width="1"/>
-        <circle cx="216.5" cy="85" r="3" fill="#0e1e18" stroke="#162818" stroke-width="0.8"/>
-        <circle cx="216.5" cy="97" r="3" fill="#70c8a0" filter="url(#glow-g)"/>
-
-        <!-- LIGHT 3 · x=360 · GREEN -->
-        <ellipse cx="360" cy="106" rx="52" ry="38" fill="url(#h-warm)" opacity="0.8"/>
-        <ellipse cx="360" cy="88"  rx="30" ry="22" fill="url(#h-green)"/>
-        <line x1="360" y1="276" x2="360" y2="128" stroke="#2a3848" stroke-width="3" stroke-linecap="round"/>
-        <line x1="360" y1="128" x2="388" y2="118" stroke="#2a3848" stroke-width="2.5" stroke-linecap="round"/>
-        <ellipse cx="391" cy="117" rx="7" ry="4" fill="#a0c8f0" filter="url(#glow-w)"/>
-        <ellipse cx="391" cy="117" rx="4" ry="2.5" fill="#e8f4fc"/>
-        <rect x="352" y="80" width="9" height="22" rx="2.5" fill="#1a2230" stroke="#2a3848" stroke-width="1"/>
-        <circle cx="356.5" cy="85" r="3" fill="#0e1e18" stroke="#162818" stroke-width="0.8"/>
-        <circle cx="356.5" cy="97" r="3" fill="#70c8a0" filter="url(#glow-g)"/>
-
-        <!-- LIGHT 4 · x=500 · RED -->
-        <ellipse cx="500" cy="106" rx="52" ry="38" fill="url(#h-warm)" opacity="0.8"/>
-        <ellipse cx="500" cy="90"  rx="30" ry="22" fill="url(#h-red)"/>
-        <line x1="500" y1="276" x2="500" y2="128" stroke="#2a3848" stroke-width="3" stroke-linecap="round"/>
-        <line x1="500" y1="128" x2="528" y2="118" stroke="#2a3848" stroke-width="2.5" stroke-linecap="round"/>
-        <ellipse cx="531" cy="117" rx="7" ry="4" fill="#a0c8f0" filter="url(#glow-w)"/>
-        <ellipse cx="531" cy="117" rx="4" ry="2.5" fill="#e8f4fc"/>
-        <rect x="492" y="80" width="9" height="22" rx="2.5" fill="#1a2230" stroke="#2a3848" stroke-width="1"/>
-        <circle cx="496.5" cy="85" r="3" fill="#e07070" filter="url(#glow-r)"/>
-        <circle cx="496.5" cy="97" r="3" fill="#0e1e18" stroke="#162818" stroke-width="0.8"/>
-
-        <!-- LIGHT 5 · x=640 · GREEN -->
-        <ellipse cx="640" cy="106" rx="52" ry="38" fill="url(#h-warm)" opacity="0.8"/>
-        <ellipse cx="640" cy="88"  rx="30" ry="22" fill="url(#h-green)"/>
-        <line x1="640" y1="276" x2="640" y2="128" stroke="#2a3848" stroke-width="3" stroke-linecap="round"/>
-        <line x1="640" y1="128" x2="668" y2="118" stroke="#2a3848" stroke-width="2.5" stroke-linecap="round"/>
-        <ellipse cx="671" cy="117" rx="7" ry="4" fill="#a0c8f0" filter="url(#glow-w)"/>
-        <ellipse cx="671" cy="117" rx="4" ry="2.5" fill="#e8f4fc"/>
-        <rect x="632" y="80" width="9" height="22" rx="2.5" fill="#1a2230" stroke="#2a3848" stroke-width="1"/>
-        <circle cx="636.5" cy="85" r="3" fill="#0e1e18" stroke="#162818" stroke-width="0.8"/>
-        <circle cx="636.5" cy="97" r="3" fill="#70c8a0" filter="url(#glow-g)"/>
-
-        <!-- LIGHT 6 · x=780 · RED -->
-        <ellipse cx="780" cy="106" rx="52" ry="38" fill="url(#h-warm)" opacity="0.8"/>
-        <ellipse cx="780" cy="90"  rx="30" ry="22" fill="url(#h-red)"/>
-        <line x1="780" y1="276" x2="780" y2="128" stroke="#2a3848" stroke-width="3" stroke-linecap="round"/>
-        <line x1="780" y1="128" x2="808" y2="118" stroke="#2a3848" stroke-width="2.5" stroke-linecap="round"/>
-        <ellipse cx="811" cy="117" rx="7" ry="4" fill="#a0c8f0" filter="url(#glow-w)"/>
-        <ellipse cx="811" cy="117" rx="4" ry="2.5" fill="#e8f4fc"/>
-        <rect x="772" y="80" width="9" height="22" rx="2.5" fill="#1a2230" stroke="#2a3848" stroke-width="1"/>
-        <circle cx="776.5" cy="85" r="3" fill="#e07070" filter="url(#glow-r)"/>
-        <circle cx="776.5" cy="97" r="3" fill="#0e1e18" stroke="#162818" stroke-width="0.8"/>
-
-        <!-- LIGHT 7 · x=920 · GREEN -->
-        <ellipse cx="920" cy="106" rx="52" ry="38" fill="url(#h-warm)" opacity="0.8"/>
-        <ellipse cx="920" cy="88"  rx="30" ry="22" fill="url(#h-green)"/>
-        <line x1="920" y1="276" x2="920" y2="128" stroke="#2a3848" stroke-width="3" stroke-linecap="round"/>
-        <line x1="920" y1="128" x2="948" y2="118" stroke="#2a3848" stroke-width="2.5" stroke-linecap="round"/>
-        <ellipse cx="951" cy="117" rx="7" ry="4" fill="#a0c8f0" filter="url(#glow-w)"/>
-        <ellipse cx="951" cy="117" rx="4" ry="2.5" fill="#e8f4fc"/>
-        <rect x="912" y="80" width="9" height="22" rx="2.5" fill="#1a2230" stroke="#2a3848" stroke-width="1"/>
-        <circle cx="916.5" cy="85" r="3" fill="#0e1e18" stroke="#162818" stroke-width="0.8"/>
-        <circle cx="916.5" cy="97" r="3" fill="#70c8a0" filter="url(#glow-g)"/>
-
-        <!-- milestone dots -->
-        <circle cx="80"  cy="187" r="4.5" fill="#e07070" filter="url(#glow-s)" class="light-zone" data-id="1"/>
-        <circle cx="220" cy="187" r="4.5" fill="#70c8a0" filter="url(#glow-s)" class="light-zone" data-id="2"/>
-        <circle cx="360" cy="187" r="4.5" fill="#70c8a0" filter="url(#glow-s)" class="light-zone" data-id="3"/>
-        <circle cx="500" cy="187" r="4.5" fill="#e07070" filter="url(#glow-s)" class="light-zone" data-id="4"/>
-        <circle cx="640" cy="187" r="4.5" fill="#70c8a0" filter="url(#glow-s)" class="light-zone" data-id="5"/>
-        <circle cx="780" cy="187" r="4.5" fill="#e07070" filter="url(#glow-s)" class="light-zone" data-id="6"/>
-        <circle cx="920" cy="187" r="4.5" fill="#70c8a0" filter="url(#glow-s)" class="light-zone" data-id="7"/>
-
-        <!-- invisible hover zones -->
-        <rect x="48"  y="70" width="64" height="220" rx="4" fill="transparent" pointer-events="all" class="light-zone" data-id="1"/>
-        <rect x="188" y="70" width="64" height="220" rx="4" fill="transparent" pointer-events="all" class="light-zone" data-id="2"/>
-        <rect x="328" y="70" width="64" height="220" rx="4" fill="transparent" pointer-events="all" class="light-zone" data-id="3"/>
-        <rect x="468" y="70" width="64" height="220" rx="4" fill="transparent" pointer-events="all" class="light-zone" data-id="4"/>
-        <rect x="608" y="70" width="64" height="220" rx="4" fill="transparent" pointer-events="all" class="light-zone" data-id="5"/>
-        <rect x="748" y="70" width="64" height="220" rx="4" fill="transparent" pointer-events="all" class="light-zone" data-id="6"/>
-        <rect x="888" y="70" width="64" height="220" rx="4" fill="transparent" pointer-events="all" class="light-zone" data-id="7"/>
-
-        <!-- car -->
-        <g id="carGroup" transform="translate(430, 214)" style="cursor:grab">
-          <rect x="0" y="5" width="48" height="18" rx="5" fill="#2e4d72" stroke="#1e3550" stroke-width="1.2"/>
-          <rect x="9" y="0" width="26" height="11" rx="3.5" fill="#3a5c82" stroke="#1e3550" stroke-width="1"/>
-          <rect x="11" y="1.5" width="9"  height="7" rx="1.5" fill="#a0c8f0" opacity="0.6"/>
-          <rect x="22" y="1.5" width="9"  height="7" rx="1.5" fill="#a0c8f0" opacity="0.4"/>
-          <polygon points="48,10 80,4 80,18" fill="#ffffff" opacity="0.08"/>
-          <ellipse cx="49" cy="12" rx="3.5" ry="2.5" fill="#ffffff" opacity="0.9" filter="url(#glow-s)"/>
-          <rect x="0" y="9"  width="3.5" height="5" rx="1.2" fill="#e07070" opacity="0.7"/>
-          <circle cx="11" cy="23" r="5.5" fill="#3a5070" stroke-width="1.5"/>
-          <circle cx="11" cy="23" r="2.2" fill="#4a6a8a"/>
-          <circle cx="37" cy="23" r="5.5" fill="#3a5070" stroke="#1e3550" stroke-width="1.5"/>
-          <circle cx="37" cy="23" r="2.2" fill="#4a6a8a"/>
-        </g>
-
-      </svg>
+        <div class="drive-scene">
+          <canvas id="driveCanvas"></canvas>
+        </div>
       </div>
-      </div>
-
       <div class="legend">
         <div class="legend-item">
           <div class="legend-dot red"></div> red light · stopped
@@ -458,15 +256,12 @@
         <div class="legend-item">
           <div class="legend-dot green"></div> green light · rolling
         </div>
-        <!-- <div class="legend-item">
-          <div class="legend-dot warm"></div> street lamp · always on
-        </div> -->
       </div>
     </div>
 
-  </div><!-- road-screen -->
+  </div><!-- /.road-screen -->
 
-</div><!-- ipad -->
+</div><!-- /.ipad -->
 
 <script>
 const memories = {
@@ -475,44 +270,41 @@ const memories = {
   3: { signal:'green', signalText:'rolling',   time:'11:58 am', speed:38, snippet:'Three lights in a row synced up. Felt like the city was just letting you through.',              song:'As It Was',       artist:'Harry Styles' },
   4: { signal:'red',   signalText:'red light', time:'12:02 pm', speed:0,  snippet:'Construction cones at the Oakland border. One lane. Sat long enough to finish the verse.',      song:'drivers license', artist:'Olivia Rodrigo' },
   5: { signal:'green', signalText:'rolling',   time:'12:07 pm', speed:62, snippet:'Brief on-ramp onto 580. Hit 62 before the exit. Bay flashing between the buildings.',           song:'Redbone',         artist:'Childish Gambino' },
-  6: { signal:'red',   signalText:'red light', time:'12:12 pm', speed:0,  snippet:'Two blocks from Ebiko. Could already picture the table. Light felt longer than it was.',        song:'Good Days',       artist:'SZA',  fact:'The Piedmont Baths once stood near here — an 1880s hot-springs resort with a massive swimming tank and salt-water tubs. A favorite SF day-trip destination until it burned down in the 1920s.' },
+  6: { signal:'red',   signalText:'red light', time:'12:12 pm', speed:0,  snippet:'Two blocks from Ebiko. Could already picture the table. Light felt longer than it was.',        song:'Good Days',       artist:'SZA', fact:'The Piedmont Baths once stood near here — an 1880s hot-springs resort with a massive swimming tank and salt-water tubs. A favorite SF day-trip until it burned down in the 1920s.' },
   7: { signal:'green', signalText:'rolling',   time:'12:16 pm', speed:14, snippet:'Turned off onto 40th. Spotted the sign. Pulled in with three minutes to spare.',                song:'Heat Waves',      artist:'Glass Animals' }
 };
 
-const ZONES = [
-  { id:1, x1:48,  x2:112 },
-  { id:2, x1:188, x2:252 },
-  { id:3, x1:328, x2:392 },
-  { id:4, x1:468, x2:532 },
-  { id:5, x1:608, x2:672 },
-  { id:6, x1:748, x2:812 },
-  { id:7, x1:888, x2:952 },
-];
-const ZONE_Y1 = 60, ZONE_Y2 = 300;
+const cv      = document.getElementById('driveCanvas');
+const card    = document.getElementById('memCard');
+let activeId  = null;
+let isDragging = false;
+let carProgress = 0.12; // 0–1 across canvas width
 
-const svg  = document.querySelector('svg.road');
-const card = document.getElementById('memCard');
-let activeId = null;
+function zoneFromProgress(p) {
+  return Math.min(7, Math.floor(p * 7) + 1);
+}
 
-function svgPoint(e) {
-  const pt = svg.createSVGPoint();
-  pt.x = e.clientX; pt.y = e.clientY;
-  return pt.matrixTransform(svg.getScreenCTM().inverse());
+function zoneFromX(clientX) {
+  const rect = cv.getBoundingClientRect();
+  const x = clientX - rect.left;
+  if (x < 0 || x > rect.width) return null;
+  return Math.min(7, Math.floor(x / (rect.width / 7)) + 1);
 }
 
 function populate(id) {
   const m = memories[id];
-  document.getElementById('mcSignal').className = 'mem-signal ' + m.signal;
+  if (!m) return;
+  const sig = document.getElementById('mcSignal');
+  sig.className = 'mem-signal ' + m.signal;
   document.getElementById('mcSignalText').textContent = m.signalText;
-  document.getElementById('mcTime').textContent       = m.time;
-  document.getElementById('mcSpeedVal').textContent   = m.speed;
-  document.getElementById('mcSnippet').textContent    = m.snippet;
-  document.getElementById('mcSongTitle').textContent  = m.song;
+  document.getElementById('mcTime').textContent = m.time;
+  document.getElementById('mcSpeedVal').textContent = m.speed;
+  document.getElementById('mcSnippet').textContent = m.snippet;
+  document.getElementById('mcSongTitle').textContent = m.song;
   document.getElementById('mcSongArtist').textContent = m.artist;
   const factEl = document.getElementById('mcFact');
-  const factTxt = document.getElementById('mcFactText');
   if (m.fact) {
-    factTxt.textContent = m.fact;
+    document.getElementById('mcFactText').textContent = m.fact;
     factEl.classList.add('show');
   } else {
     factEl.classList.remove('show');
@@ -520,118 +312,217 @@ function populate(id) {
 }
 
 function positionCard(cx, cy) {
-  const W = 260, H = card.offsetHeight || 200;
-  let left = cx - W / 2;
-  let top  = cy - H - 20;
-  left = Math.max(12, Math.min(left, window.innerWidth - W - 12));
-  if (top < 80) top = cy + 20;
+  const cw = card.offsetWidth;
+  const ch = card.offsetHeight;
+  const ww = window.innerWidth;
+  let left = cx + 16;
+  if (left + cw > ww - 12) left = cx - cw - 16;
+  let top = cy - ch - 12;
+  if (top < 8) top = cy + 20;
   card.style.left = left + 'px';
-  card.style.top  = top  + 'px';
+  card.style.top  = top + 'px';
 }
 
-svg.addEventListener('mousemove', e => {
-  if (dragging) return;
-  const pt   = svgPoint(e);
-  const zone = ZONES.find(z => pt.x >= z.x1 && pt.x <= z.x2 && pt.y >= ZONE_Y1 && pt.y <= ZONE_Y2);
-  if (zone) {
-    if (zone.id !== activeId) {
-      activeId = zone.id;
-      populate(zone.id);
-      card.classList.add('visible');
-    }
-    positionCard(e.clientX, e.clientY);
-  } else {
-    if (activeId !== null) {
-      card.classList.remove('visible');
-      activeId = null;
-    }
+// Show card on hover (no drag required)
+cv.addEventListener('mousemove', e => {
+  const rect = cv.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const p = Math.max(0, Math.min(1, x / rect.width));
+
+  if (isDragging) {
+    carProgress = Math.max(0.02, Math.min(0.97, p));
+    draw();
   }
+
+  const zoneId = zoneFromProgress(p);
+  if (zoneId !== activeId) { activeId = zoneId; populate(zoneId); card.classList.add('visible'); }
+  positionCard(e.clientX, e.clientY);
 });
 
-svg.addEventListener('mouseleave', () => {
-  if (dragging) return;
+cv.addEventListener('mouseleave', () => {
   card.classList.remove('visible');
   activeId = null;
+  isDragging = false;
 });
 
-// ── Car drag (mouse + touch) ───────────────────────────────────
-const car = document.getElementById('carGroup');
-let dragging = false;
-let carX = 430;
-let dragOriginSvgX = 0;
-const CAR_HALF = 24;
-const CAR_MIN  = 20;
-const CAR_MAX  = 952;
+cv.addEventListener('mousedown', e => {
+  isDragging = true;
+  const rect = cv.getBoundingClientRect();
+  carProgress = Math.max(0.02, Math.min(0.97, (e.clientX - rect.left) / rect.width));
+  draw();
+});
 
-function svgXOf(clientX) {
-  const pt = svg.createSVGPoint();
-  pt.x = clientX; pt.y = 0;
-  return pt.matrixTransform(svg.getScreenCTM().inverse()).x;
-}
+window.addEventListener('mouseup', () => { isDragging = false; });
 
-function carScreenPos() {
-  const pt = svg.createSVGPoint();
-  pt.x = carX + CAR_HALF; pt.y = 214;
-  const s = pt.matrixTransform(svg.getScreenCTM());
-  return { x: s.x, y: s.y };
-}
+cv.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  const rect = cv.getBoundingClientRect();
+  const p = Math.max(0, Math.min(1, (t.clientX - rect.left) / rect.width));
+  carProgress = Math.max(0.02, Math.min(0.97, p));
+  draw();
+  const zoneId = zoneFromProgress(p);
+  if (zoneId !== activeId) { activeId = zoneId; populate(zoneId); card.classList.add('visible'); }
+  positionCard(t.clientX, t.clientY);
+}, { passive: false });
 
-function moveCar(clientX) {
-  const svgX = svgXOf(clientX);
-  carX = Math.max(CAR_MIN, Math.min(CAR_MAX, carX + (svgX - dragOriginSvgX)));
-  dragOriginSvgX = svgX;
-  car.setAttribute('transform', `translate(${carX}, 214)`);
+cv.addEventListener('touchend', () => { card.classList.remove('visible'); activeId = null; });
 
-  const cx   = carX + CAR_HALF;
-  const zone = ZONES.find(z => cx >= z.x1 && cx <= z.x2);
-  if (zone) {
-    if (zone.id !== activeId) { populate(zone.id); card.classList.add('visible'); activeId = zone.id; }
-    const s = carScreenPos();
-    positionCard(s.x, s.y);
-  } else {
-    card.classList.remove('visible');
-    activeId = null;
+// ── Canvas driving scene — static background, car follows drag ────────────
+(function() {
+  if (!cv) return;
+  const c = cv.getContext('2d');
+  let W, H;
+  const objs = [], lamps = [];
+
+  for (let i = 0; i < 30; i++) {
+    objs.push({ x: (i / 30) * 1000, h: 10+Math.random()*14, w: 8+Math.random()*10, lit: Math.random()>.5 });
   }
-}
+  for (let i = 0; i < 14; i++) lamps.push({ x: i * 72 });
 
-// Touch
-car.addEventListener('touchstart', e => {
-  e.preventDefault();
-  dragging = true;
-  dragOriginSvgX = svgXOf(e.touches[0].clientX);
-  car.style.cursor = 'grabbing';
-}, { passive: false });
+  function resize() {
+    const d = window.devicePixelRatio || 1;
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W*d; cv.height = H*d;
+    c.setTransform(d, 0, 0, d, 0, 0);
+  }
 
-window.addEventListener('touchmove', e => {
-  if (!dragging) return;
-  e.preventDefault();
-  moveCar(e.touches[0].clientX);
-}, { passive: false });
+  function drawCar(cx, cy) {
+    const t = Date.now() / 60;
+    c.save(); c.translate(cx, cy); c.scale(-1, 1);
+    c.fillStyle = 'rgba(0,0,0,0.25)';
+    c.beginPath(); c.ellipse(0, 4, 26, 3, 0, 0, 6.28); c.fill();
+    c.beginPath();
+    c.moveTo(-26,0); c.lineTo(-28,-3); c.quadraticCurveTo(-26,-7,-20,-7);
+    c.lineTo(-11,-7); c.lineTo(-8,-13); c.quadraticCurveTo(-5,-16,1,-16);
+    c.lineTo(11,-16); c.quadraticCurveTo(15,-16,17,-13); c.lineTo(21,-7);
+    c.lineTo(26,-7); c.quadraticCurveTo(29,-5,28,-2); c.lineTo(28,0);
+    c.closePath();
+    c.fillStyle = '#1C3A6A'; c.fill();
+    c.strokeStyle = 'rgba(80,130,210,0.25)'; c.lineWidth = 0.6; c.stroke();
+    c.beginPath();
+    c.moveTo(-9,-8); c.lineTo(-6,-14); c.quadraticCurveTo(-4,-15,0,-15);
+    c.lineTo(3,-15); c.lineTo(3,-8); c.closePath();
+    c.fillStyle = 'rgba(80,140,220,0.2)'; c.fill();
+    c.beginPath();
+    c.moveTo(5,-8); c.lineTo(5,-15); c.lineTo(10,-15);
+    c.quadraticCurveTo(13,-15,15,-12); c.lineTo(18,-8); c.closePath();
+    c.fillStyle = 'rgba(80,140,220,0.18)'; c.fill();
+    [[-14,1],[16,1]].forEach(([wx,wy]) => {
+      c.beginPath(); c.arc(wx, wy, 4.5, 0, 6.28); c.fillStyle = '#0A0A10'; c.fill();
+      c.beginPath(); c.arc(wx, wy, 3,   0, 6.28); c.fillStyle = '#22222A'; c.fill();
+      for (let s = 0; s < 5; s++) {
+        const a = t + s*1.256;
+        c.strokeStyle = 'rgba(160,160,180,0.25)'; c.lineWidth = 0.5;
+        c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx+Math.cos(a)*2.5, wy+Math.sin(a)*2.5); c.stroke();
+      }
+    });
+    c.fillStyle = 'rgba(255,230,160,0.08)';
+    c.beginPath(); c.moveTo(-28,-4); c.lineTo(-60,-8); c.lineTo(-60,2); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(255,220,150,0.7)'; c.fillRect(-28,-5,2,2);
+    c.fillStyle = 'rgba(220,40,40,0.6)'; c.fillRect(27,-5,2,2);
+    c.restore();
+  }
 
-window.addEventListener('touchend', () => {
-  if (!dragging) return;
-  dragging = false;
-  car.style.cursor = 'grab';
-});
+  function drawSceneryObj(x, y, o) {
+    const bh = o.h*1.6, bw = o.w*1.2;
+    c.fillStyle = '#1E2230';
+    c.fillRect(x-bw/2, y-bh, bw, bh);
+    c.strokeStyle = 'rgba(255,255,255,0.04)'; c.lineWidth = 0.5;
+    c.strokeRect(x-bw/2, y-bh, bw, bh);
+    for (let wy = y-bh+3; wy < y-2; wy += 5)
+      for (let wx = x-bw/2+2; wx < x+bw/2-3; wx += 5) {
+        c.fillStyle = o.lit ? 'rgba(240,200,80,0.55)' : 'rgba(120,170,240,0.2)';
+        c.fillRect(wx, wy, 2.5, 2.5);
+      }
+    if (bh > 20) { c.strokeStyle='#3A3A4A'; c.lineWidth=0.8; c.beginPath(); c.moveTo(x,y-bh); c.lineTo(x,y-bh-6); c.stroke(); }
+  }
 
-// Mouse
-car.addEventListener('mousedown', e => {
-  e.preventDefault();
-  dragging = true;
-  dragOriginSvgX = svgXOf(e.clientX);
-  car.style.cursor = 'grabbing';
-});
+  function drawCitySkyline(rY) {
+    const rng = [28,18,42,15,35,22,48,20,30,14,38,25,45,16,32,20,40,18,28,35];
+    for (let i = 0; i < 20; i++) {
+      const bx = 30 + i*52;
+      if (bx < -60 || bx > W+60) continue;
+      const bh = rng[i], bw = 16 + i%3*8;
+      c.fillStyle = '#141822';
+      c.fillRect(bx-bw/2, rY-bh, bw, bh+2);
+    }
+  }
 
-window.addEventListener('mousemove', e => {
-  if (!dragging) return;
-  moveCar(e.clientX);
-});
+  window.draw = function draw() {
+    c.clearRect(0, 0, W, H);
+    const hY = H*0.38, rY = H*0.52;
 
-window.addEventListener('mouseup', () => {
-  if (!dragging) return;
-  dragging = false;
-  car.style.cursor = 'grab';
-});
+    // Sky
+    const sky = c.createLinearGradient(0, 0, 0, hY+8);
+    ['#2A5090','#4A80C0','#6AAAD8','#90D0F0','#B8F0FF'].forEach((col,i) =>
+      sky.addColorStop([0,0.25,0.5,0.8,1][i], col));
+    c.fillStyle = sky; c.fillRect(0, 0, W, hY+8);
+
+    // Sun
+    const sx = W*0.73, sy = hY*0.37;
+    const gl = c.createRadialGradient(sx, sy, 0, sx, sy, 85);
+    gl.addColorStop(0, 'rgba(255,250,210,0.65)');
+    gl.addColorStop(0.35, 'rgba(255,140,50,0.08)');
+    gl.addColorStop(1, 'transparent');
+    c.fillStyle = gl; c.fillRect(sx-85, sy-85, 170, 90);
+    c.beginPath(); c.arc(sx, sy, 12, 0, 6.28); c.fillStyle = 'rgba(255,255,245,1)'; c.fill();
+
+    // Terrain band
+    const og = c.createLinearGradient(0, hY, 0, rY);
+    og.addColorStop(0, '#101420'); og.addColorStop(1, '#0C1018');
+    c.fillStyle = og; c.fillRect(0, hY, W, rY-hY);
+
+    drawCitySkyline(rY);
+
+    // Road
+    const rg = c.createLinearGradient(0, rY, 0, H);
+    rg.addColorStop(0, '#1C1C28'); rg.addColorStop(1, '#14141C');
+    c.fillStyle = rg; c.fillRect(0, rY, W, H-rY);
+
+    c.strokeStyle = 'rgba(255,255,255,0.07)'; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(0, rY); c.lineTo(W, rY); c.stroke();
+
+    // Static road dashes
+    const dY = rY+(H-rY)*0.38;
+    c.strokeStyle = 'rgba(255,255,255,0.13)'; c.lineWidth = 1.5;
+    for (let x = 0; x < W+30; x += 55) {
+      c.beginPath(); c.moveTo(x, dY); c.lineTo(x+28, dY); c.stroke();
+    }
+
+    // Scenery
+    objs.forEach(o => {
+      const x = (o.x / 1000) * W;
+      drawSceneryObj(x, rY, o);
+    });
+
+    // Lamp posts (static)
+    lamps.forEach(l => {
+      const x = (l.x / (14*72)) * W;
+      const py = rY + (H-rY)*0.18;
+      c.strokeStyle = '#4A4A5A'; c.lineWidth = 1.5;
+      c.beginPath(); c.moveTo(x, py); c.lineTo(x, py-18); c.lineTo(x+6, py-20); c.stroke();
+      const lg = c.createRadialGradient(x+6, py-20, 0, x+6, py-20, 14);
+      lg.addColorStop(0, 'rgba(255,200,100,0.2)'); lg.addColorStop(1, 'transparent');
+      c.fillStyle = lg; c.beginPath(); c.arc(x+5, py-18, 12, 0, 6.28); c.fill();
+    });
+
+    // BMW car — position driven by carProgress
+    const carX = W * carProgress;
+    const carY = rY + (H-rY)*0.55;
+    drawCar(carX, carY);
+
+    // Vignette
+    const vg = c.createLinearGradient(0, 0, 0, H);
+    vg.addColorStop(0, 'rgba(7,8,14,0.3)'); vg.addColorStop(0.3, 'transparent');
+    vg.addColorStop(0.7, 'transparent'); vg.addColorStop(1, 'rgba(7,8,14,0.5)');
+    c.fillStyle = vg; c.fillRect(0, 0, W, H);
+  };
+
+  resize();
+  window.addEventListener('resize', () => { resize(); draw(); });
+  draw();
+})();
 </script>
 
 </body>
