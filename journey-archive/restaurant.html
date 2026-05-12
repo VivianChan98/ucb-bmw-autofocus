@@ -261,6 +261,12 @@
 
   </div><!-- /.road-screen -->
 
+  <div class="journey-nav">
+    <a class="jn-item active" href="restaurant.html"><div class="jn-dot"></div><span></span></a>
+    <a class="jn-item" href="marina.html"><div class="jn-dot"></div><span></span></a>
+    <a class="jn-item" href="lawrence.html"><div class="jn-dot"></div><span></span></a>
+  </div>
+
 </div><!-- /.ipad -->
 
 <script>
@@ -380,6 +386,9 @@ cv.addEventListener('touchend', () => { card.classList.remove('visible'); active
   }
   for (let i = 0; i < 14; i++) lamps.push({ x: i * 72 });
 
+  // One signal per zone, derived from memories
+  const signals = ['red','green','green','red','green','red','green'];
+
   function resize() {
     const d = window.devicePixelRatio || 1;
     W = cv.clientWidth; H = cv.clientHeight;
@@ -436,6 +445,59 @@ cv.addEventListener('touchend', () => { card.classList.remove('visible'); active
         c.fillRect(wx, wy, 2.5, 2.5);
       }
     if (bh > 20) { c.strokeStyle='#3A3A4A'; c.lineWidth=0.8; c.beginPath(); c.moveTo(x,y-bh); c.lineTo(x,y-bh-6); c.stroke(); }
+  }
+
+  function drawTrafficLight(tlx, signal, isActive) {
+    const baseY = H * 0.52 + (H - H * 0.52) * 0.08;
+    const poleH = 40;
+    const topY  = baseY - poleH;
+    const boxW  = 9, boxH = 26;
+    const armLen = 6;
+    const lcx   = tlx + armLen;
+    const bx    = lcx - boxW / 2;
+    const by    = topY - boxH;
+
+    // Pole
+    c.strokeStyle = '#484858'; c.lineWidth = 1.8;
+    c.beginPath(); c.moveTo(tlx, baseY); c.lineTo(tlx, topY); c.stroke();
+    // Arm
+    c.beginPath(); c.moveTo(tlx, topY); c.lineTo(lcx, topY); c.stroke();
+
+    // Housing
+    c.fillStyle = '#111118';
+    c.strokeStyle = 'rgba(255,255,255,0.08)'; c.lineWidth = 0.5;
+    c.beginPath();
+    if (c.roundRect) c.roundRect(bx, by, boxW, boxH, 2);
+    else c.rect(bx, by, boxW, boxH);
+    c.fill(); c.stroke();
+
+    // Red bulb
+    const redOn = signal === 'red';
+    c.beginPath(); c.arc(lcx, by + 5.5, 3, 0, 6.28);
+    c.fillStyle = redOn ? (isActive ? '#FF2828' : '#CC2828') : '#2C1010'; c.fill();
+    if (redOn) {
+      const r = isActive ? 16 : 9;
+      const g = c.createRadialGradient(lcx, by+5.5, 0, lcx, by+5.5, r);
+      g.addColorStop(0, isActive ? 'rgba(255,50,50,0.55)' : 'rgba(200,50,50,0.28)');
+      g.addColorStop(1, 'transparent');
+      c.fillStyle = g; c.beginPath(); c.arc(lcx, by+5.5, r, 0, 6.28); c.fill();
+    }
+
+    // Amber (always dim)
+    c.beginPath(); c.arc(lcx, by + 13, 3, 0, 6.28);
+    c.fillStyle = '#201A07'; c.fill();
+
+    // Green bulb
+    const greenOn = signal === 'green';
+    c.beginPath(); c.arc(lcx, by + 20.5, 3, 0, 6.28);
+    c.fillStyle = greenOn ? (isActive ? '#28EE78' : '#22BB5E') : '#0B1E10'; c.fill();
+    if (greenOn) {
+      const r = isActive ? 16 : 9;
+      const g = c.createRadialGradient(lcx, by+20.5, 0, lcx, by+20.5, r);
+      g.addColorStop(0, isActive ? 'rgba(40,220,120,0.55)' : 'rgba(34,180,90,0.28)');
+      g.addColorStop(1, 'transparent');
+      c.fillStyle = g; c.beginPath(); c.arc(lcx, by+20.5, r, 0, 6.28); c.fill();
+    }
   }
 
   function drawCitySkyline(rY) {
@@ -505,6 +567,13 @@ cv.addEventListener('touchend', () => { card.classList.remove('visible'); active
       const lg = c.createRadialGradient(x+6, py-20, 0, x+6, py-20, 14);
       lg.addColorStop(0, 'rgba(255,200,100,0.2)'); lg.addColorStop(1, 'transparent');
       c.fillStyle = lg; c.beginPath(); c.arc(x+5, py-18, 12, 0, 6.28); c.fill();
+    });
+
+    // Traffic lights — one per zone
+    const activeZone = zoneFromProgress(carProgress);
+    signals.forEach((sig, i) => {
+      const tlx = ((i + 0.5) / 7) * W;
+      drawTrafficLight(tlx, sig, (i + 1) === activeZone);
     });
 
     // BMW car — position driven by carProgress
