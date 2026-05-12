@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lawrence Hall of Science — Journey Archive · BMW</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg:      #07080E;
+      --surface: #0D0E18;
+      --surface2:#12131E;
+      --border:  rgba(255,255,255,0.07);
+      --text:    #EEEEF2;
+      --text2:   #4A4A6A;
+      --accent:  #1C69D4;
+      --orange:  #C8622A;
+      --slate:   #5A7A9A;
+      --font:    'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .ipad .body {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      padding: 16px 20px 18px;
+      gap: 12px;
+      min-height: auto;
+      font-family: var(--font);
+      overflow: hidden;
+    }
+
+    /* ── header row ── */
+    .l-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .l-eyebrow {
+      font-size: 8px; letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--text2); margin-bottom: 4px;
+    }
+    .l-title {
+      font-size: 20px; font-weight: 700; color: var(--text); line-height: 1.15;
+    }
+    .l-title em { font-style: normal; color: var(--accent); }
+    .l-stats {
+      display: flex; gap: 0; flex-shrink: 0;
+      border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    }
+    .l-stat {
+      padding: 9px 15px; border-right: 1px solid var(--border); text-align: center;
+    }
+    .l-stat:last-child { border-right: none; }
+    .l-stat-val { font-size: 16px; font-weight: 700; color: var(--text); line-height: 1; }
+    .l-stat-lbl { font-size: 8px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text2); margin-top: 3px; }
+
+    /* ── 3-col grid ── */
+    .l-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr 1fr;
+      gap: 10px;
+      overflow: hidden;
+    }
+    .l-col { display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+
+    /* ── generic card ── */
+    .l-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px 14px;
+      overflow: hidden;
+    }
+    .l-card-label {
+      font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text2); margin-bottom: 10px;
+    }
+
+    /* ── photo card ── */
+    .l-photo {
+      border-radius: 14px;
+      overflow: hidden;
+      flex: 1;
+      min-height: 0;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    .l-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .l-photo-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 18px 12px 10px;
+      background: linear-gradient(transparent, rgba(7,8,14,0.85));
+      font-size: 9px; color: rgba(238,238,242,0.7); letter-spacing: 1px;
+    }
+
+    /* ── cone stat ── */
+    .l-cone-stat {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 13px 14px; flex-shrink: 0;
+    }
+    .l-cone-num {
+      font-size: 48px; font-weight: 800; letter-spacing: -2px;
+      line-height: 1; color: var(--orange);
+    }
+    .l-cone-lbl { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .l-cone-sub { font-size: 9px; color: var(--text2); line-height: 1.5; }
+
+    /* ── what you passed ── */
+    .l-pass-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 11px;
+    }
+    .l-pass-ico { flex-shrink: 0; }
+    .l-pass-count { font-size: 17px; font-weight: 800; color: var(--text); line-height: 1; }
+    .l-pass-name { font-size: 10px; color: var(--text2); margin-top: 1px; line-height: 1.3; }
+    .l-pass-note { margin-left: auto; font-size: 8px; color: var(--text2); text-align: right; flex-shrink: 0; }
+
+    /* ── route moments ── */
+    .l-moment {
+      display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border);
+    }
+    .l-moment:last-child { border-bottom: none; }
+    .l-moment-time { font-size: 9px; color: var(--text2); width: 36px; flex-shrink: 0; padding-top: 2px; }
+    .l-moment-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+    .l-moment-txt { font-size: 11px; color: var(--text); line-height: 1.5; }
+    .l-moment-txt em { font-style: normal; color: var(--accent); font-weight: 600; }
+    .l-song-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 3px 8px; margin-top: 5px;
+      font-size: 9px; font-weight: 600; color: var(--text);
+    }
+    .l-song-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
+    .l-song-artist { font-size: 8px; color: var(--text2); font-weight: 400; }
+
+    /* ── elevation card ── */
+    .l-elev {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 13px 14px; flex-shrink: 0;
+    }
+    .l-elev-big {
+      font-size: 36px; font-weight: 800; letter-spacing: -1.5px;
+      line-height: 1; color: var(--slate); margin-bottom: 3px;
+    }
+    .l-elev-lbl { font-size: 10px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .l-elev-bar {
+      height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; margin-bottom: 5px;
+    }
+    .l-elev-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--slate), #8AAAC8); }
+    .l-elev-sub { font-size: 9px; color: var(--text2); line-height: 1.5; }
+
+    /* ── wrapped ── */
+    .l-wrapped {
+      background: linear-gradient(135deg, rgba(28,105,212,0.14) 0%, rgba(28,105,212,0.04) 100%);
+      border: 1px solid rgba(28,105,212,0.28);
+      border-radius: 14px; padding: 13px 14px;
+      flex: 1;
+    }
+    .l-wrapped-big {
+      font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 6px;
+    }
+    .l-wrapped-big em { font-style: normal; color: var(--accent); }
+    .l-wrapped-sub { font-size: 10px; color: var(--text2); line-height: 1.6; margin-bottom: 10px; }
+    .l-badge {
+      display: inline-block;
+      font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--accent); background: rgba(28,105,212,0.1);
+      border: 1px solid rgba(28,105,212,0.22); padding: 4px 10px; border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="ipad">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="tb-left">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+        <circle cx="18" cy="18" r="17" fill="#07080E" stroke="rgba(255,255,255,0.12)" stroke-width=".8"/>
+        <clipPath id="rnd"><circle cx="18" cy="18" r="14"/></clipPath>
+        <rect x="4"  y="4"  width="14" height="14" fill="#1C69D4" clip-path="url(#rnd)"/>
+        <rect x="18" y="18" width="14" height="14" fill="#1C69D4" clip-path="url(#rnd)"/>
+        <rect x="18" y="4"  width="14" height="14" fill="#EEEEF2" clip-path="url(#rnd)"/>
+        <rect x="4"  y="18" width="14" height="14" fill="#EEEEF2" clip-path="url(#rnd)"/>
+        <line x1="18" y1="4"  x2="18" y2="32" stroke="#07080E" stroke-width="1.3"/>
+        <line x1="4"  y1="18" x2="32" y2="18" stroke="#07080E" stroke-width="1.3"/>
+        <circle cx="18" cy="18" r="14" fill="none" stroke="#07080E" stroke-width=".7"/>
+      </svg>
+      <div>
+        <div class="brand">Journey Archive</div>
+        <div class="brand-sub">Lawrence Hall of Science · BMW iDrive</div>
+      </div>
+    </div>
+    <div class="tb-right">
+      <div style="text-align:right">
+        <div style="font-size:13px;font-weight:500;color:#EEEEF2">Lawrence Drive · Wrapped</div>
+        <div style="font-size:10px;color:#3A3A55;margin-top:3px">Mar 16 · 9:14 AM · Centennial Drive</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- header row -->
+    <div class="l-header">
+      <div>
+        <div class="l-eyebrow">Mon · Mar 16 · 2026</div>
+        <div class="l-title">Up to the <em>Lawrence Hall of Science.</em></div>
+      </div>
+      <div class="l-stats">
+        <div class="l-stat"><div class="l-stat-val">3.8</div><div class="l-stat-lbl">miles</div></div>
+        <div class="l-stat"><div class="l-stat-val">19m</div><div class="l-stat-lbl">drive</div></div>
+        <div class="l-stat"><div class="l-stat-val">+1,200</div><div class="l-stat-lbl">ft gain</div></div>
+        <div class="l-stat"><div class="l-stat-val">62°F</div><div class="l-stat-lbl">outside</div></div>
+      </div>
+    </div>
+
+    <!-- 3-col grid -->
+    <div class="l-grid">
+
+      <!-- COL 1: cones photo + cone stat -->
+      <div class="l-col">
+
+        <div class="l-photo" style="flex: 1">
+          <img src="cones.png" alt="Construction zone on Centennial Drive">
+          <div class="l-photo-caption">Centennial Dr · construction zone · 9:22 AM</div>
+        </div>
+
+        <div class="l-cone-stat">
+          <div class="l-cone-num">14</div>
+          <div>
+            <div class="l-cone-lbl">traffic cones</div>
+            <div class="l-cone-sub">Single-lane merge.<br>You waited. You were patient.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COL 2: what you passed + moments + elevation -->
+      <div class="l-col">
+
+        <div class="l-card-label" style="padding: 0 2px;">What you passed</div>
+
+        <!-- Prius -->
+        <div class="l-pass-item">
+          <div class="l-pass-ico">
+            <svg width="42" height="32" viewBox="0 0 42 32" fill="none">
+              <ellipse cx="21" cy="26" rx="16" ry="1.8" fill="rgba(0,0,0,0.3)"/>
+              <path d="M3 19 L4 15 Q6 11 10 11 L15 11 L17 7 Q19 5 21 5 L25 5 Q27 5 28 7 L30 11 L35 11 Q38 13 37 18 L37 19 Z" fill="#2A4A3A"/>
+              <path d="M17 12 L19 6 Q20 5 21 5 L23 5 L23 12 Z" fill="rgba(120,200,160,0.2)"/>
+              <path d="M25 12 L25 6 L27 7 Q29 9 30 12 Z" fill="rgba(120,200,160,0.18)"/>
+              <circle cx="11" cy="22" r="4" fill="#0A0A10"/>
+              <circle cx="31" cy="22" r="4" fill="#0A0A10"/>
+              <circle cx="11" cy="22" r="2" fill="#1E2E1E"/>
+              <circle cx="31" cy="22" r="2" fill="#1E2E1E"/>
+              <rect x="3"  y="15" width="3" height="2" rx="0.4" fill="rgba(220,40,40,0.7)"/>
+              <rect x="36" y="15" width="3" height="2" rx="0.4" fill="rgba(255,220,150,0.85)"/>
+            </svg>
+          </div>
+          <div>
+            <div class="l-pass-count">2</div>
+            <div class="l-pass-name">Green Cars<br>passed uphill</div>
+          </div>
+          <div class="l-pass-note">9:19<br>hairpin turn</div>
+        </div>
+
+        <!-- Cyclist -->
+        <div class="l-pass-item">
+          <div class="l-pass-ico">
+            <svg width="42" height="38" viewBox="0 0 42 38" fill="none">
+              <circle cx="11" cy="28" r="7" stroke="#1C69D4" stroke-width="1.4" fill="none"/>
+              <circle cx="33" cy="28" r="7" stroke="#1C69D4" stroke-width="1.4" fill="none"/>
+              <circle cx="11" cy="28" r="2" fill="#1C69D4"/>
+              <circle cx="33" cy="28" r="2" fill="#1C69D4"/>
+              <path d="M11 28 L19 14 L33 28" stroke="#EEEEF2" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+              <path d="M19 14 L27 14 L33 28" stroke="#EEEEF2" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+              <line x1="19" y1="14" x2="19" y2="22" stroke="#EEEEF2" stroke-width="1.3" stroke-linecap="round"/>
+              <path d="M26 14 L30 12" stroke="#EEEEF2" stroke-width="1.3" stroke-linecap="round"/>
+              <path d="M18 14 L16 12 L20 12" stroke="#EEEEF2" stroke-width="1.1" stroke-linecap="round"/>
+              <circle cx="21" cy="8" r="3.5" fill="#1C69D4"/>
+              <path d="M21 11 L19 18 L27 14" stroke="#3A8AEE" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <div>
+            <div class="l-pass-count">2</div>
+            <div class="l-pass-name">Road cyclists<br>climbing Centennial</div>
+          </div>
+          <div class="l-pass-note">9:17<br>going slow</div>
+        </div>
+
+        <!-- Truck -->
+        <div class="l-pass-item">
+          <div class="l-pass-ico">
+            <svg width="42" height="32" viewBox="0 0 42 32" fill="none">
+              <rect x="2" y="10" width="26" height="14" rx="2" fill="#2A3040"/>
+              <rect x="2" y="10" width="9" height="14" rx="2" fill="#1C2530"/>
+              <rect x="3" y="12" width="7" height="7" rx="1" fill="rgba(120,160,220,0.2)"/>
+              <rect x="28" y="14" width="12" height="10" rx="1.5" fill="#1E2838"/>
+              <rect x="29" y="15" width="10" height="5" rx="1" fill="rgba(100,140,200,0.15)"/>
+              <circle cx="9"  cy="24" r="4" fill="#0A0A10"/>
+              <circle cx="33" cy="24" r="4" fill="#0A0A10"/>
+              <circle cx="9"  cy="24" r="2" fill="#1A1A28"/>
+              <circle cx="33" cy="24" r="2" fill="#1A1A28"/>
+              <rect x="2"  y="15" width="2" height="2" rx="0.3" fill="rgba(220,40,40,0.7)"/>
+              <rect x="38" y="15" width="2" height="2" rx="0.3" fill="rgba(255,220,150,0.85)"/>
+              <text x="14" y="20" font-size="4" fill="rgba(238,238,242,0.35)" font-family="Helvetica Neue,sans-serif" font-weight="700">UC BERKELEY</text>
+            </svg>
+          </div>
+          <div>
+            <div class="l-pass-count">1</div>
+            <div class="l-pass-name">UC facilities truck<br>heading to campus</div>
+          </div>
+          <div class="l-pass-note">9:16<br>downhill</div>
+        </div>
+
+        <!-- Elevation card -->
+        <div class="l-elev" style="margin-top:auto">
+          <div class="l-card-label">Elevation</div>
+          <div class="l-elev-big">+1,200<span style="font-size:16px;letter-spacing:0;font-weight:600"> ft</span></div>
+          <div class="l-elev-lbl">gained in 3.8 miles</div>
+          <div class="l-elev-bar"><div class="l-elev-fill" style="width:82%"></div></div>
+          <div class="l-elev-sub">Avg grade 6%. Peak 14% on the<br>final switchback before the lot.</div>
+        </div>
+
+      </div>
+
+      <!-- COL 3: view photo + moments + wrapped -->
+      <div class="l-col">
+
+        <div class="l-photo" style="flex: 1.1">
+          <img src="view.png" alt="Bay view from Lawrence Hall of Science">
+          <div class="l-photo-caption">1,562 ft · overcast · the whole bay from here</div>
+        </div>
+
+        <div class="l-card" style="flex-shrink:0; padding: 11px 13px;">
+          <div class="l-card-label">In the car</div>
+          <div class="l-moment">
+            <div class="l-moment-time">9:14</div>
+            <div class="l-moment-dot" style="background:#1C69D4"></div>
+            <div class="l-moment-txt">Left campus. Turned onto Centennial.
+              <div class="l-song-pill"><div class="l-song-dot" style="background:#1C69D4"></div>Motion Sickness <span class="l-song-artist">· Phoebe Bridgers</span></div>
+            </div>
+          </div>
+          <div class="l-moment">
+            <div class="l-moment-time">9:22</div>
+            <div class="l-moment-dot" style="background:#C8622A"></div>
+            <div class="l-moment-txt">Construction. <em>14 cones.</em> Single lane. Slowed to 8 mph.</div>
+          </div>
+          <div class="l-moment">
+            <div class="l-moment-time">9:33</div>
+            <div class="l-moment-dot" style="background:#5A7A9A"></div>
+            <div class="l-moment-txt">Parked. Stepped out. Clouds had come in low. <em>Still worth it.</em></div>
+          </div>
+        </div>
+
+        <div class="l-wrapped">
+          <div class="l-card-label" style="color:rgba(28,105,212,0.6)">Wrapped</div>
+          <div class="l-wrapped-big">14 cones, 1,200 feet, and a view that was <em>overcast and still perfect.</em></div>
+          <div class="l-wrapped-sub">3.8 miles up. 3 cars passed. One construction delay. You sat on the hood for four minutes before driving back down.</div>
+          <span class="l-badge">highest drive logged</span>
+        </div>
+
+      </div>
+    </div><!-- /.l-grid -->
+
+  </div><!-- /.body -->
+
+  <div class="journey-nav">
+    <a class="jn-item" href="restaurant.html"><div class="jn-dot"></div><span></span></a>
+    <a class="jn-item" href="marina.html"><div class="jn-dot"></div><span></span></a>
+    <a class="jn-item active" href="lawrence.html"><div class="jn-dot"></div><span></span></a>
+  </div>
+
+</div><!-- /.ipad -->
+
+</body>
+</html>

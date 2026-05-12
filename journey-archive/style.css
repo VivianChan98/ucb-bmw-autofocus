@@ -1,0 +1,103 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #111218;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  padding: 32px;
+}
+
+.ipad {
+  background: #07080E;
+  border-radius: 28px;
+  border: 1.5px solid rgba(255,255,255,0.09);
+  overflow: hidden;
+  color: #EEEEF2;
+  width: 100%;
+  max-width: 1024px;
+  box-shadow: 0 48px 96px rgba(0,0,0,0.75);
+}
+
+/* ── Top bar ─────────────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.tb-left  { display: flex; align-items: center; gap: 18px; }
+.tb-right { display: flex; align-items: center; gap: 24px; }
+
+.brand     { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; color: #EEEEF2; }
+.brand-sub { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: #6d6d7d; margin-top: 3px; }
+
+/* ── Body layout ─────────────────────────────────────────────── */
+.body {
+  display: flex;
+  flex-direction: column;
+  min-height: 640px;
+  padding: 28px 32px;
+  gap: 22px;
+}
+
+/* ── Section headers ─────────────────────────────────────────── */
+.sec-hdr { display: flex; align-items: center; gap: 10px; }
+.sec-lbl { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: #2C2C45; font-weight: 500; white-space: nowrap; }
+.sec-line { flex: 1; height: 1px; background: rgba(255,255,255,0.04); }
+
+.divider { height: 1px; background: rgba(255,255,255,0.04); }
+
+/* ── Cards ───────────────────────────────────────────────────── */
+.card {
+  background: #0D0E18;
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ── Journey nav ─────────────────────────────────────────────── */
+.journey-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  padding: 13px 32px 15px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.jn-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.jn-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.jn-item span {
+  font-size: 8px; letter-spacing: 1.8px; text-transform: uppercase;
+  color: rgba(238,238,242,0.25);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  transition: color 0.15s;
+}
+
+.jn-item.active .jn-dot {
+  background: #1C69D4;
+  box-shadow: 0 0 8px rgba(28,105,212,0.7);
+}
+
+.jn-item.active span { color: rgba(238,238,242,0.75); }
+
+.jn-item:hover .jn-dot { background: rgba(28,105,212,0.55); }
+.jn-item:hover span    { color: rgba(238,238,242,0.5); }
