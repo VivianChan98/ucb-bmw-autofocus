@@ -2,8 +2,6 @@
 
 This research explores how software-defined vehicles collect and use personal data, proposing four trust-centered design concepts that were prototyped through Journey Archive, Data Transparency Dashboard, Route Resonance, and Auto Acquaintance.
 
-
-
 ## Route Resonance
 
 Route Resonance is an adaptive ambient sound and visual environment simulation, designed with the aesthetic of a modern BMW iDrive interface. It automatically or manually adjusts the mood, sounds, and scenery based on driving context like weather, time of day, and location.
@@ -38,3 +36,13 @@ If you want to try the AI-powered mood inference feature:
 ## Auto Acquaintance
 
 Please see [this Github repository!](https://github.com/StaceyLei32/bmw-recommendations)
+
+
+
+## Journey Archive
+
+Journey Archive is an interactive prototype that visualizes personal driving memories. Each trip is rendered as either an animated road scene or journey memory wrapped where users can hover or drag across the canvas to explore moments from the drive, including speed, traffic signals, music playing, and location context, or history/facts.
+
+### Getting Started
+
+Open `journey-archive/restaurant.html`, `journey-archive/marina.html`, or `journey-archive/lawrence.html` in your browser. No dependencies or API key required.
