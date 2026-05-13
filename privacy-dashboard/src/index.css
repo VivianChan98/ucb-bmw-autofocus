@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0A0E14;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+.cursor-hidden {
+  cursor: none !important;
+}
+
+@keyframes fade-in {
+  from { opacity: 0 }
+  to   { opacity: 1 }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(8px) }
+  to   { opacity: 1; transform: translateY(0) }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(10px) }
+  to   { opacity: 1; transform: translateX(0) }
+}
+
+@keyframes connecting-line {
+  0%   { stroke-dashoffset: 100; opacity: .2 }
+  50%  { stroke-dashoffset: 0;   opacity: .7 }
+  100% { stroke-dashoffset: -100; opacity: .2 }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg) }
+  to   { transform: rotate(360deg) }
+}
+
+@keyframes data-flow-out {
+  from { stroke-dashoffset: 0 }
+  to   { stroke-dashoffset: 40 }
+}
+
+@keyframes data-flow-in {
+  from { stroke-dashoffset: 40 }
+  to   { stroke-dashoffset: 0 }
+}
+
+button { font-family: 'IBM Plex Mono', 'Helvetica Neue', sans-serif; }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
